@@ -1,5 +1,5 @@
 listowner = {
-"Derraemon"
+    "Derraemon"
 }
 
 transcedence = {12,30,686,858,886,1040,1294,4164,4190,1684}
@@ -1822,7 +1822,7 @@ setting.rechecking = function(threads)
             findPath(tile.x,tile.y)
             sleep(25)
             setting.reconnect(threads,doorfarm,tile.x,tile.y)
-            while tile.fg == seed do
+            if tile.fg == seed then
                 punch(0,0)
                 sleep(delayharvest)
                 setting.reconnect(threads,doorfarm,tile.x,tile.y)
@@ -2018,7 +2018,7 @@ setting.rechecking = function(threads)
                 end
                 findPath(tile.x,tile.y)
                 sleep(delayplant)
-                while getTile(tile.x,tile.y).fg ~= seed do
+                if getTile(tile.x,tile.y).fg ~= seed then
                     place(seed,0,0)
                     sleep(delayplant)
                     setting.reconnect(threads,doorfarm,tile.x,tile.y)
@@ -2246,6 +2246,7 @@ setting.harvest = function(threads)
                         setting.webhookinfo()
                     else
                         setting.plant(threads)
+                        setJob("Harvesting")
                         goto BACK
                     end
                 elseif findItem(112) > mingems and buypack then
@@ -2258,7 +2259,7 @@ setting.harvest = function(threads)
                 findPath(x,y)
                 sleep(25)
                 setting.reconnect(threads,doorfarm,x,y)
-                while getTile(x,y).fg == seed do
+                if getTile(x,y).fg == seed then
                     punch(0,0)
                     sleep(delayharvest)
                     setting.reconnect(threads,doorfarm,x,y)
@@ -2313,7 +2314,7 @@ setting.plant = function(threads)
                 findPath(x,y)
                 sleep(25)
                 setting.reconnect(threads,doorfarm,x,y)
-                while getTile(x,y).fg ~= seed do
+                if getTile(x,y).fg ~= seed then
                     place(seed,0,0)
                     sleep(delayplant)
                     setting.reconnect(threads,doorfarm,x,y)
@@ -2672,6 +2673,6 @@ while true do
             removeBot(getBot().name)
             sleep(1500)
         end 
-        error()
+        break
     end
 end
