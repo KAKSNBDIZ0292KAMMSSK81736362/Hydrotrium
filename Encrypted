@@ -54,58 +54,76 @@ setting.split = function(str, ptr)
 end
 
 setting.tileht = function(threads)
-    while getTile(math.floor(getBot().x / 32) - 2,math.floor(getBot().y / 32)).fg == seed do
-        punch(-2,0)
+    botX = math.floor(getBot().x / 32)
+    botY = math.floor(getBot().y / 32)
+    for i = 1, 2 do
+        if getTile(botX - 2,botY).fg == seed then
+            punch(-2,0)
+            sleep(delayharvest)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayharvest)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32) - 1,math.floor(getBot().y / 32)).fg == seed do
-        punch(-1,0)
+        if getTile(botX - 1,botY).fg == seed then
+            punch(-1,0)
+            sleep(delayharvest)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayharvest)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == seed do
-        punch(0,0)
+        if getTile(botX,botY).fg == seed then
+            punch(0,0)
+            sleep(delayharvest)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayharvest)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32) + 1,math.floor(getBot().y / 32)).fg == seed do
-        punch(1,0)
+        if getTile(botX + 1,botY).fg == seed then
+            punch(1,0)
+            sleep(delayharvest)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayharvest)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32) + 2,math.floor(getBot().y / 32)).fg == seed do
-        punch(2,0)
+        if getTile(botX + 2,botY).fg == seed  then
+            punch(2,0)
+            sleep(delayharvest)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayharvest)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
     end
 end
 
 setting.tilept = function(threads)
-    while getTile(math.floor(getBot().x / 32) - 2,math.floor(getBot().y / 32)).fg ~= seed do
-        place(seed,-2,0)
+    botX = math.floor(getBot().x / 32)
+    botY = math.floor(getBot().y / 32)
+    for i = 1,2 do
+        if getTile(botX - 2,botY).fg ~= seed then
+            place(seed,-2,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32) - 1,math.floor(getBot().y / 32)).fg ~= seed do
-        place(seed,-1,0)
+        if getTile(botX - 1,botY).fg ~= seed then
+            place(seed,-1,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg ~= seed do
-        place(seed,0,0)
+        if getTile(botX,botY).fg ~= seed then
+            place(seed,0,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32) + 1,math.floor(getBot().y / 32)).fg ~= seed do
-        place(seed,1,0)
+        if getTile(botX + 1,botY).fg ~= seed then
+            place(seed,1,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-    end
-    while getTile(math.floor(getBot().x / 32) + 2,math.floor(getBot().y / 32)).fg ~= seed do
-        place(seed,2,0)
+        if getTile(botX + 2,botY).fg ~= seed then
+            place(seed,2,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
+        end
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
     end
 end
 
@@ -713,7 +731,7 @@ setting.warp = function(world,door)
         while getBot().world ~= string.upper(world) and not nuked and not subserver do
             while getBot().status ~= "online" do
                 connect()
-                sleep(delayreconnect)
+                sleep(delaywarp)
                 if getBot().status == "suspended" or getBot().status == "banned" then
                     if backupwhensuspend then
                         removeBot(getBot().name)
@@ -2279,7 +2297,7 @@ setting.infolic = function(name)
     end
 end
 
-setting.checkinglicense(license)
+setting.checkinglicense(license:upper())
 local username = os.getenv('USERNAME');
 if setting.checkk() and setting.infolic("C:\\Users\\" .. username .. "\\AppData\\Local\\true.txt") then
     os.remove("C:\\Users\\" .. username .. "\\AppData\\Local\\true.txt")
