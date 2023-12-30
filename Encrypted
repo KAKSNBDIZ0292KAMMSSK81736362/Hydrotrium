@@ -2239,7 +2239,7 @@ setting.checkinglicense = function(content)
   
         $WebClient=New-Object net.webclient
         $gorkem = "]]..content..[["
-        $raw = $WebClient.DownloadString("https://rentry.co/SAFKAFRNAKLFAOIFHY12809YRGBSAFCA")
+        $raw = $WebClient.DownloadString("https://raw.githubusercontent.com/KAKSNBDIZ0292KAMMSSK81736362/Licen/main/File")
         If ($raw | %{$_ -match $gorkem}) 
         {
             If (Test-Path $deneme2) {
@@ -2279,12 +2279,12 @@ setting.infolic = function(name)
     end
 end
 
-setting.checkinglicense(license:upper())
+setting.checkinglicense(license)
 local username = os.getenv('USERNAME');
 if setting.checkk() and setting.infolic("C:\\Users\\" .. username .. "\\AppData\\Local\\true.txt") then
     os.remove("C:\\Users\\" .. username .. "\\AppData\\Local\\true.txt")
     print("License are valid, running script")
-elseif setting.infolic("C:\\Users\\" .. username .. "\\AppData\\Local\\false.txt") then
+elseif license == "" or license:find("%s") or setting.infolic("C:\\Users\\" .. username .. "\\AppData\\Local\\false.txt") then
     os.remove("C:\\Users\\" .. username .. "\\AppData\\Local\\false.txt")
     print("Input ur valid license")
     error()
