@@ -2284,7 +2284,7 @@ local username = os.getenv('USERNAME');
 if setting.checkk() and setting.infolic("C:\\Users\\" .. username .. "\\AppData\\Local\\true.txt") then
     os.remove("C:\\Users\\" .. username .. "\\AppData\\Local\\true.txt")
     print("License are valid, running script")
-elseif license == "" or setting.infolic("C:\\Users\\" .. username .. "\\AppData\\Local\\false.txt") then
+elseif license:find("%s") or setting.infolic("C:\\Users\\" .. username .. "\\AppData\\Local\\false.txt") then
     os.remove("C:\\Users\\" .. username .. "\\AppData\\Local\\false.txt")
     print("Input ur valid license")
     error()
