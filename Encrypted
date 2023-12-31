@@ -1839,11 +1839,16 @@ setting.rechecking = function(threads)
                         setJob("Rechecking")
                         setting.warp(threads,doorfarm)
                         setting.webhookinfo()
-                    elseif findItem(seed) > 180 then
-                        setting.storingseeds(threads)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.webhookinfo()
+                    elseif findItem(seed) >= amountseed then
+                        if dontplant then
+                            setting.storingseeds(threads)
+                            setJob("Rechecking")
+                            setting.warp(threads,doorfarm)
+                            setting.webhookinfo()
+                        else
+                            setting.plant(threads)
+                            goto BACK
+                        end
                     elseif findItem(112) > mingems and buypack then
                         setting.buying(threads)
                         setting.storingpacks(threads)
@@ -1883,11 +1888,16 @@ setting.rechecking = function(threads)
                     setJob("Rechecking")
                     setting.warp(threads,doorfarm)
                     setting.webhookinfo()
-                elseif findItem(seed) > 180 then
-                    setting.storingseeds(threads)
-                    setJob("Rechecking")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
+                elseif findItem(seed) >= amountseed then
+                    if dontplant then
+                        setting.storingseeds(threads)
+                        setJob("Rechecking")
+                        setting.warp(threads,doorfarm)
+                        setting.webhookinfo()
+                    else
+                        setting.plant(threads)
+                        goto BACK
+                    end
                 elseif findItem(112) > mingems and buypack then
                     setting.buying(threads)
                     setting.storingpacks(threads)
