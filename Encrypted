@@ -220,7 +220,6 @@ setting.backupacc = function(threads)
                 end
             elseif typeaccount == "normal" then
                 addBot(thread,threading,num)
-                sleep(8000)
             end
         else
             if typeaccount == "guest" then
@@ -239,7 +238,6 @@ setting.backupacc = function(threads)
                 end
             elseif typeaccount == "normal" then
                 addBot(thread,threading)
-                sleep(8000)
             end
         end
         sleep(8000)
