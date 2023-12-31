@@ -1508,6 +1508,188 @@ setting.storingseeds = function(threads)
 end
 
 setting.rotate = function(threads)
+    ::Check::
+    if findItem(98) == 0 and pickaxe and getBot().status == "online" then
+        setting.takepickaxe()
+        goto Check
+    end
+    if not pnbother then
+        ::BACK::
+        setJob("PNB")
+        while math.floor(getBot().x / 32) ~= 10 or math.floor(getBot().y / 32) ~= 1 do
+            findPath(10,1)
+            sleep(500)
+        end
+        botX = math.floor(getBot().x / 32)
+        botY = math.floor(getBot().y / 32)
+        if pnbtile == 1 then
+            while findItem(block) >= pnbtile do
+                if getTile(botX,botY + tileY).bg ~= 0 or getTile(botX, botY + tileY).fg ~= 0 then
+                    punch(0,tileY)
+                    sleep(delaypunch)
+                    setting.reconnect(threads,doorfarm,botX,botY)
+                end
+                if getTile(botX,botY + tileY).bg == 0 or getTile(botX, botY + tileY).fg == 0 then
+                    place(block,0,tileY)
+                    sleep(delayplace)
+                    setting.reconnect(threads,doorfarm,botX,botY)
+                end
+                collect(2)
+                sleep(30)
+                if getBot().level >= maxlevel and backuplevel then
+                    setting.checkaccount(threads)
+                    setJob("Pnb")
+                    setting.warp(threads,doorfarm)
+                    setting.webhookinfo()
+                    goto BACK
+                end
+                if findItem(112) >= mingems and buypack then
+                    setting.buying(threads)
+                    setting.storingpacks(threads)
+                    setJob("Pnb")
+                    setting.warp(threads,doorfarm)
+                    goto BACK
+                end
+            end
+        else
+            while findItem(block) >= pnbtile do
+                while setting.placeitem(botX,botY) do
+                    for _,i in pairs(tilebreak) do
+                        if getTile(botX + i,botY + tileY).fg == 0 and getTile(botX + i,botY + tileY).bg == 0 then
+                            place(block,i,tileY)
+                            sleep(delayplace)
+                            setting.reconnect(threads,doorfarm,botX,botY)
+                        end
+                    end
+                end
+                while setting.punchitem(botX,botY) do
+                    for _,i in pairs(tilebreak) do
+                        if getTile(botX + i,botY + tileY).fg ~= 0 or getTile(botX + i,botY + tileY).bg ~= 0 then
+                            punch(i,tileY)
+                            sleep(delaypunch)
+                            setting.reconnect(threads,doorfarm,botX,botY)
+                        end
+                    end
+                end
+                collect(3)
+                sleep(30)
+                if getBot().level >= maxlevel and backuplevel then
+                    setting.checkaccount(threads)
+                    setJob("Pnb")
+                    setting.warp(threads,doorfarm)
+                    setting.webhookinfo()
+                    goto BACK
+                end
+                if findItem(112) >= mingems and buypack then
+                    setting.buying(threads)
+                    setting.storingpacks(threads)
+                    setJob("Pnb")
+                    setting.warp(threads,doorfarm)
+                    setting.webhookinfo()
+                    goto BACK
+                end
+            end
+        end
+    else
+        ::BACK::
+        setJob("PNB")
+        setting.warp(find,"")
+        setting.webhookinfo()
+        if not failwarp then
+            if not subserver then
+                if not nuked then
+                    for _, tile in pairs(getTiles()) do
+                        if tile.fg == 226 then
+                            findPath(tile.x,tile.y-1)
+                            sleep(500)
+                            setting.reconnect(find,"")
+                        end
+                    end
+                    botX = math.floor(getBot().x / 32)
+                    botY = math.floor(getBot().y / 32)
+                    if pnbtile == 1 then
+                        while findItem(block) >= pnbtile do
+                            if getTile(botX,botY + tileY).bg ~= 0 or getTile(botX, botY + tileY).fg ~= 0 then
+                                punch(0,tileY)
+                                sleep(delaypunch)
+                                setting.reconnect(find,"",botX,botY)
+                            end
+                            if getTile(botX,botY + tileY).bg == 0 or getTile(botX, botY + tileY).fg == 0 then
+                                place(block,0,tileY)
+                                sleep(delayplace)
+                                setting.reconnect(find,"",botX,botY)
+                            end
+                            collect(2)
+                            sleep(30)
+                            if getBot().level >= maxlevel and backuplevel then
+                                setting.checkaccount(threads)
+                                goto BACK
+                            end
+                            if findItem(112) >= mingems and buypack then
+                                setting.buying(threads)
+                                setting.storingpacks(threads)
+                                goto BACK
+                            end
+                        end
+                    else
+                        while findItem(block) >= pnbtile do
+                            while setting.placeitem(botX,botY) do
+                                for _,i in pairs(tilebreak) do
+                                    if getTile(botX + i,botY + tileY).fg == 0 and getTile(botX + i,botY + tileY).bg == 0 then
+                                        place(block,i,tileY)
+                                        sleep(delayplace)
+                                        setting.reconnect(find,"",botX,botY)
+                                    end
+                                end
+                            end
+                            while setting.punchitem(botX,botY) do
+                                for _,i in pairs(tilebreak) do
+                                    if getTile(botX + i,botY + tileY).fg ~= 0 or getTile(botX + i,botY + tileY).bg ~= 0 then
+                                        punch(i,tileY)
+                                        sleep(delaypunch)
+                                        setting.reconnect(find,"",botX,botY)
+                                    end
+                                end
+                            end
+                            collect(3)
+                            sleep(30)
+                            if getBot().level >= maxlevel and backuplevel then
+                                setting.checkaccount(threads)
+                                goto BACK
+                            end
+                            if findItem(112) >= mingems and buypack then
+                                setting.buying(threads)
+                                setting.storingpacks(threads)
+                                goto BACK
+                            end
+                        end
+                    end
+                else
+                    nuked = false
+                    sleep(5000)
+                    setting.botinfo("World : [ "..find.." ] is NUKED @everyone")
+                    print("World pnb : [ "..find.." ] is NUKED, terminated script")
+                    error()
+                end
+            else
+                subserver = false
+                sleep(5000)
+                print("Bot : "..getBot().name.." system is sub-server, sleeping for 2 minutes")
+                setting.botinfo("Bot : "..getBot().name.." system is sub-server, sleeping for 2 minutes @everyone")
+                sleep(120000)
+                goto BACK
+            end
+        else
+            failwarp = false
+            sleep(5000)
+            print("Fail warp, sleeping for 2 minutes")
+            setting.botinfo("Fail warp, sleeping for 2 minutes")
+            sleep(120000)
+            goto BACK
+        end
+    end
+    setting.recycles(threads)
+end
     if not pnbother then
         ::BACK::
         setJob("PNB")
