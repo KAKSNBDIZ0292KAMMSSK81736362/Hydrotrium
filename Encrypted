@@ -122,6 +122,7 @@ setting.tilept = function(threads)
     end
     sleep(delayplant)
 end
+
 for i =  1,farmperbot do
     table.insert(worlds,worldfarm[math.floor((indexbot - 1) * farmperbot + i)])
 end
@@ -342,6 +343,22 @@ setting.backupacc = function(threads)
                 end
             end
         end
+    end
+    if findItem(9640) > 0 then
+        ::SUCK::
+        setting.warp(getBot().name,"")
+        while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32) - 1).fg ~= 9640 do
+            place(9640,0,-1)
+            sleep(delayplace)
+        end
+        if findItem(9640) > 0 then
+            goto SUCK
+        end
+    end
+    ::Check::
+    if findItem(98) == 0 and pickaxe and getBot().status == "online" then
+        setting.takepickaxe()
+        goto Check
     end
 end
 
@@ -1517,188 +1534,6 @@ setting.storingseeds = function(threads)
 end
 
 setting.rotate = function(threads)
-    ::Check::
-    if findItem(98) == 0 and pickaxe and getBot().status == "online" then
-        setting.takepickaxe()
-        goto Check
-    end
-    if not pnbother then
-        ::BACK::
-        setJob("PNB")
-        while math.floor(getBot().x / 32) ~= 10 or math.floor(getBot().y / 32) ~= 1 do
-            findPath(10,1)
-            sleep(500)
-        end
-        botX = math.floor(getBot().x / 32)
-        botY = math.floor(getBot().y / 32)
-        if pnbtile == 1 then
-            while findItem(block) >= pnbtile do
-                if getTile(botX,botY + tileY).bg ~= 0 or getTile(botX, botY + tileY).fg ~= 0 then
-                    punch(0,tileY)
-                    sleep(delaypunch)
-                    setting.reconnect(threads,doorfarm,botX,botY)
-                end
-                if getTile(botX,botY + tileY).bg == 0 or getTile(botX, botY + tileY).fg == 0 then
-                    place(block,0,tileY)
-                    sleep(delayplace)
-                    setting.reconnect(threads,doorfarm,botX,botY)
-                end
-                collect(2)
-                sleep(30)
-                if getBot().level >= maxlevel and backuplevel then
-                    setting.checkaccount(threads)
-                    setJob("Pnb")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
-                    goto BACK
-                end
-                if findItem(112) >= mingems and buypack then
-                    setting.buying(threads)
-                    setting.storingpacks(threads)
-                    setJob("Pnb")
-                    setting.warp(threads,doorfarm)
-                    goto BACK
-                end
-            end
-        else
-            while findItem(block) >= pnbtile do
-                while setting.placeitem(botX,botY) do
-                    for _,i in pairs(tilebreak) do
-                        if getTile(botX + i,botY + tileY).fg == 0 and getTile(botX + i,botY + tileY).bg == 0 then
-                            place(block,i,tileY)
-                            sleep(delayplace)
-                            setting.reconnect(threads,doorfarm,botX,botY)
-                        end
-                    end
-                end
-                while setting.punchitem(botX,botY) do
-                    for _,i in pairs(tilebreak) do
-                        if getTile(botX + i,botY + tileY).fg ~= 0 or getTile(botX + i,botY + tileY).bg ~= 0 then
-                            punch(i,tileY)
-                            sleep(delaypunch)
-                            setting.reconnect(threads,doorfarm,botX,botY)
-                        end
-                    end
-                end
-                collect(3)
-                sleep(30)
-                if getBot().level >= maxlevel and backuplevel then
-                    setting.checkaccount(threads)
-                    setJob("Pnb")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
-                    goto BACK
-                end
-                if findItem(112) >= mingems and buypack then
-                    setting.buying(threads)
-                    setting.storingpacks(threads)
-                    setJob("Pnb")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
-                    goto BACK
-                end
-            end
-        end
-    else
-        ::BACK::
-        setJob("PNB")
-        setting.warp(find,"")
-        setting.webhookinfo()
-        if not failwarp then
-            if not subserver then
-                if not nuked then
-                    for _, tile in pairs(getTiles()) do
-                        if tile.fg == 226 then
-                            findPath(tile.x,tile.y-1)
-                            sleep(500)
-                            setting.reconnect(find,"")
-                        end
-                    end
-                    botX = math.floor(getBot().x / 32)
-                    botY = math.floor(getBot().y / 32)
-                    if pnbtile == 1 then
-                        while findItem(block) >= pnbtile do
-                            if getTile(botX,botY + tileY).bg ~= 0 or getTile(botX, botY + tileY).fg ~= 0 then
-                                punch(0,tileY)
-                                sleep(delaypunch)
-                                setting.reconnect(find,"",botX,botY)
-                            end
-                            if getTile(botX,botY + tileY).bg == 0 or getTile(botX, botY + tileY).fg == 0 then
-                                place(block,0,tileY)
-                                sleep(delayplace)
-                                setting.reconnect(find,"",botX,botY)
-                            end
-                            collect(2)
-                            sleep(30)
-                            if getBot().level >= maxlevel and backuplevel then
-                                setting.checkaccount(threads)
-                                goto BACK
-                            end
-                            if findItem(112) >= mingems and buypack then
-                                setting.buying(threads)
-                                setting.storingpacks(threads)
-                                goto BACK
-                            end
-                        end
-                    else
-                        while findItem(block) >= pnbtile do
-                            while setting.placeitem(botX,botY) do
-                                for _,i in pairs(tilebreak) do
-                                    if getTile(botX + i,botY + tileY).fg == 0 and getTile(botX + i,botY + tileY).bg == 0 then
-                                        place(block,i,tileY)
-                                        sleep(delayplace)
-                                        setting.reconnect(find,"",botX,botY)
-                                    end
-                                end
-                            end
-                            while setting.punchitem(botX,botY) do
-                                for _,i in pairs(tilebreak) do
-                                    if getTile(botX + i,botY + tileY).fg ~= 0 or getTile(botX + i,botY + tileY).bg ~= 0 then
-                                        punch(i,tileY)
-                                        sleep(delaypunch)
-                                        setting.reconnect(find,"",botX,botY)
-                                    end
-                                end
-                            end
-                            collect(3)
-                            sleep(30)
-                            if getBot().level >= maxlevel and backuplevel then
-                                setting.checkaccount(threads)
-                                goto BACK
-                            end
-                            if findItem(112) >= mingems and buypack then
-                                setting.buying(threads)
-                                setting.storingpacks(threads)
-                                goto BACK
-                            end
-                        end
-                    end
-                else
-                    nuked = false
-                    sleep(5000)
-                    setting.botinfo("World : [ "..find.." ] is NUKED @everyone")
-                    print("World pnb : [ "..find.." ] is NUKED, terminated script")
-                    error()
-                end
-            else
-                subserver = false
-                sleep(5000)
-                print("Bot : "..getBot().name.." system is sub-server, sleeping for 2 minutes")
-                setting.botinfo("Bot : "..getBot().name.." system is sub-server, sleeping for 2 minutes @everyone")
-                sleep(120000)
-                goto BACK
-            end
-        else
-            failwarp = false
-            sleep(5000)
-            print("Fail warp, sleeping for 2 minutes")
-            setting.botinfo("Fail warp, sleeping for 2 minutes")
-            sleep(120000)
-            goto BACK
-        end
-    end
-    setting.recycles(threads)
-end
     if not pnbother then
         ::BACK::
         setJob("PNB")
@@ -1929,13 +1764,26 @@ setting.rechecking = function(threads)
             end
         end
         if findItem(block) > 180 then
-            if pnbother then
-                setting.rotate(threads)
-                setJob("Rechecking")
-                setting.warp(threads,doorfarm)
-                setting.webhookinfo()
+            if leveling then
+                if getBot().level >= maxlevel then
+                    if pnbother then
+                        setting.rotate(threads)
+                        setJob("Harvesting")
+                        setting.warp(threads,doorfarm)
+                        setting.webhookinfo()
+                    else
+                        setting.rotate(threads)
+                    end
+                end
             else
-                setting.rotate(threads)
+                if pnbother then
+                    setting.rotate(threads)
+                    setJob("Harvesting")
+                    setting.warp(threads,doorfarm)
+                    setting.webhookinfo()
+                else
+                    setting.rotate(threads)
+                end
             end
         end
         if findItem(eventList[1]) > amountevent then
@@ -1961,22 +1809,39 @@ setting.rechecking = function(threads)
             setting.webhookinfo()
         end
     end
-    if leveling then
-        if getBot().level >= setmaxlevel then
-            for _, obj in pairs(getObjects()) do
-                if obj.id == block then
-                    if setting.itemFloat(block) ~= 0 then
-                        findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
-                        sleep(30)
-                        if ignoregems then
-                            collect(range,112)
-                        else
-                            collect(range)
+    for _, obj in pairs(getObjects()) do
+        if obj.id == block then
+            if setting.itemFloat(block) ~= 0 then
+                findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
+                sleep(30)
+                if ignoregems then
+                    collect(range,112)
+                else
+                    collect(range)
+                end
+                sleep(30)
+                setting.reconnect(threads,doorfarm,math.floor(obj.x / 32),math.floor(obj.y / 32))
+            end
+            if findItem(block) > 180 then
+                if leveling then
+                    if getBot().level < setmaxlevel then
+                        while math.floor(getBot().x / 32) ~= 98 or math.floor(getBot().y / 32) ~= 0 do
+                            findPath(98,0)
+                            sleep(500)
                         end
-                        sleep(30)
-                        setting.reconnect(threads,doorfarm,math.floor(obj.x / 32),math.floor(obj.y / 32))
-                    end
-                    if findItem(block) > 180 then
+                        while findItem(block) > 0 do
+                            drop(block)
+                            sleep(delaydrop)
+                            setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
+                            if findItem(block) > 0 then
+                                move(-1,0)
+                                sleep(100)
+                                drop(block)
+                                sleep(delaydrop)
+                                setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
+                            end
+                        end
+                    else
                         if pnbother then
                             setting.rotate(threads)
                             setJob("Rechecking")
@@ -1986,25 +1851,36 @@ setting.rechecking = function(threads)
                             setting.rotate(threads)
                         end
                     end
-                    if findItem(eventList[1]) > amountevent then
-                        setting.storingevents(threads)
-                        setJob("Rechecking")
+                else
+                    if pnbother then
+                        setting.rotate(threads)
+                        print("Rechecking")
                         setting.warp(threads,doorfarm)
                         setting.webhookinfo()
-                    elseif findItem(seed) > 180 then
-                        setting.storingseeds(threads)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.webhookinfo()
-                    elseif findItem(112) > mingems and buypack then
-                        setting.buying(threads)
-                        setting.storingpacks(threads)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.webhookinfo()
+                    else
+                        setting.rotate(threads)
                     end
                 end
             end
+            if findItem(eventList[1]) > amountevent then
+                setting.storingevents(threads)
+                setJob("Rechecking")
+                setting.warp(threads,doorfarm)
+                setting.webhookinfo()
+            elseif findItem(seed) > 180 then
+                setting.storingseeds(threads)
+                setJob("Rechecking")
+                setting.warp(threads,doorfarm)
+                setting.webhookinfo()
+            elseif findItem(112) > mingems and buypack then
+                setting.buying(threads)
+                setting.storingpacks(threads)
+                setJob("Rechecking")
+                setting.warp(threads,doorfarm)
+                setting.webhookinfo()
+            end
+        end
+    end
             for _, tile in pairs(getTiles()) do
                 if tile.fg == block or tile.bg == block then
                     findPath(tile.x,tile.y)
@@ -2017,62 +1893,6 @@ setting.rechecking = function(threads)
                     collect(3)
                     sleep(30)
                 end
-            end
-        end
-    else
-        for _, obj in pairs(getObjects()) do
-            if obj.id == block then
-                if setting.itemFloat(block) ~= 0 then
-                    findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
-                    sleep(30)
-                    if ignoregems then
-                        collect(range,112)
-                    else
-                        collect(range)
-                    end
-                    sleep(30)
-                    setting.reconnect(threads,doorfarm,math.floor(obj.x / 32),math.floor(obj.y / 32))
-                end
-                if findItem(block) > 180 then
-                    if pnbother then
-                        setting.rotate(threads)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.webhookinfo()
-                    else
-                        setting.rotate(threads)
-                    end
-                end
-                if findItem(eventList[1]) > amountevent then
-                    setting.storingevents(threads)
-                    setJob("Rechecking")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
-                elseif findItem(seed) > 180 then
-                    setting.storingseeds(threads)
-                    setJob("Rechecking")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
-                elseif findItem(112) > mingems and buypack then
-                    setting.buying(threads)
-                    setting.storingpacks(threads)
-                    setJob("Rechecking")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
-                end
-            end
-        end
-        for _, tile in pairs(getTiles()) do
-            if tile.fg == block or tile.bg == block then
-                findPath(tile.x,tile.y)
-                setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).bg == block or getTile(math.floor(getBot().x / 32), math.floor(getBot().y / 32)).fg == block do
-                    punch(0,0)
-                    sleep(delaypunch)
-                    setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                end
-                collect(3)
-                sleep(30)
             end
         end
     end
@@ -2251,13 +2071,26 @@ setting.harvest = function(threads)
                 setting.webhookinfo()
             end
             if findItem(block) > 180 then
-                if pnbother then
-                    setting.rotate(threads)
-                    setJob("Harvesting")
-                    setting.warp(threads,doorfarm)
-                    setting.webhookinfo()
+                if leveling then
+                    if getBot().level >= maxlevel then
+                        if pnbother then
+                            setting.rotate(threads)
+                            setJob("Harvesting")
+                            setting.warp(threads,doorfarm)
+                            setting.webhookinfo()
+                        else
+                            setting.rotate(threads)
+                        end
+                    end
                 else
-                    setting.rotate(threads)
+                    if pnbother then
+                        setting.rotate(threads)
+                        setJob("Harvesting")
+                        setting.warp(threads,doorfarm)
+                        setting.webhookinfo()
+                    else
+                        setting.rotate(threads)
+                    end
                 end
             end
             if findItem(iditemtowear) == 0 then
@@ -2337,73 +2170,6 @@ setting.plant = function(threads)
         setJob("Harvesting")
         setting.warp(threads,doorfarm)
         setting.webhookinfo()
-    end
-end
-
-setting.collectobj = function(threads)
-    for _, obj in pairs(getObjects()) do
-        if obj.id == block then
-            if setting.itemFloat(block) ~= 0 then
-                findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
-                sleep(30)
-                if ignoregems then
-                    collect(range,112)
-                else
-                    collect(range)
-                end
-                setting.reconnect(threads,doorfarm,math.floor(obj.x / 32),math.floor(obj.y / 32))
-            end
-            if findItem(block) > 180 then
-                if leveling then
-                    if getBot().level < setmaxlevel then
-                        while math.floor(getBot().x / 32) ~= 10 or math.floor(getBot().y / 32) ~= 1 do
-                            findPath(30,1)
-                            sleep(500)
-                        end
-                        while findItem(block) > 0 do
-                            drop(block)
-                            sleep(delaydrop)
-                            setting.reconnect(threads,doorfarm,math.floor(getBot().x / 32),math.floor(getBot().y / 32))
-                        end
-                    else
-                        if pnbother then
-                            setting.rotate(threads)
-                            setJob("Collecting")
-                            setting.warp(threads,doorfarm)
-                            setting.webhookinfo()
-                        else
-                            setting.rotate(threads)
-                        end
-                    end
-                else
-                    if pnbother then
-                        setting.rotate(threads)
-                        setJob("Collecting")
-                        setting.warp(threads,doorfarm)
-                        setting.webhookinfo()
-                    else
-                        setting.rotate(threads)
-                    end
-                end
-            end
-            if findItem(eventList[1]) > amountevent then
-                setting.storingevents(threads)
-                setJob("Collecting")
-                setting.warp(threads,doorfarm)
-                setting.webhookinfo()
-            elseif findItem(seed) > 180 then
-                setting.storingseeds(threads)
-                setJob("Collecting")
-                setting.warp(threads,doorfarm)
-                setting.webhookinfo()
-            elseif findItem(112) > mingems and buypack then
-                setting.buying(threads)
-                setting.storingpacks(threads)
-                setJob("Collecting")
-                setting.warp(threads,doorfarm)
-                setting.webhookinfo()
-            end
-        end
     end
 end
 
@@ -2604,53 +2370,6 @@ while true do
             sleep(120000)
             goto BACK
         end 
-    end
-    if leveling then
-        if getBot().level < setmaxlevel then
-            for _, inf in ipairs(worlds) do
-                ::BACK::
-                setting.webhookinfo()
-                setting.warp(inf,doorfarm)
-                setting.storageinfo()
-                if not failwarp then
-                    if not subserver then
-                        if not nuked then
-                            if not wrong then
-                                setting.collectobj(inf)
-                            else
-                                wrong = false
-                                sleep(5000)
-                                setting.writeFile("worldinfo","[ "..inf.." ] is wrong id")
-                                sleep(1000)
-                                print(""..inf.." is wrong door id, skipped world")
-                                setting.botinfo("[ "..inf.." ] is wrong door id, skipped world @everyone")
-                            end
-                        else
-                            nuked = false
-                            sleep(5000)
-                            setting.writeFile("worldinfo","[ "..inf.." ] is NUKED !!")
-                            sleep(1000)
-                            print(""..inf.." is NUKED!, check ur world !!")
-                            setting.botinfo("[ "..inf.." ] is NUKED!, check ur world !! @everyone")
-                        end
-                    else
-                        subserver = false
-                        sleep(5000)
-                        print("Bot : "..getBot().name.." system is sub-server, sleeping for 2 minutes")
-                        setting.botinfo("Bot : "..getBot().name.." system is sub-server, sleeping for 2 minutes @everyone")
-                        sleep(120000)
-                        goto BACK
-                    end
-                else
-                    failwarp = false
-                    sleep(5000)
-                    print("Fail warp, sleeping for 2 minutes")
-                    setting.botinfo("Fail warp, sleeping for 2 minutes")
-                    sleep(120000)
-                    goto BACK
-                end 
-            end
-        end
     end
     if not looping then
         if findItem(seed) > 0 then
