@@ -162,6 +162,7 @@ setting.generate = function()
     return generate
 end
 local find = setting.generate()
+local trx = setting.generate()
 
 setting.punchitem = function(x,y)
     for _,tilepunch in pairs(tilebreak) do
