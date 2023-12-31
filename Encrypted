@@ -91,7 +91,6 @@ setting.tilept = function(threads)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    sleep(delayplant)
     if getTile(botX - 1,botY).fg ~= seed then
         place(seed,-1,0)
         sleep(delayplant)
@@ -102,21 +101,17 @@ setting.tilept = function(threads)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    sleep(delayplant)
     if getTile(botX + 1,botY).fg ~= seed then
         place(seed,1,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    sleep(delayplant)
     if getTile(botX + 2,botY).fg ~= seed then
         place(seed,2,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    sleep(delayplant)
 end
-
 for i =  1,farmperbot do
     table.insert(worlds,worldfarm[math.floor((indexbot - 1) * farmperbot + i)])
 end
