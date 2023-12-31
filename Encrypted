@@ -56,27 +56,27 @@ end
 setting.tileht = function(threads)
     botX = math.floor(getBot().x / 32)
     botY = math.floor(getBot().y / 32)
-    while getTile(botX - 2,botY).fg == seed and getTile(botX - 2,botY).ready do
+    if getTile(botX - 2,botY).fg == seed and getTile(botX - 2,botY).ready then
         punch(-2,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    while getTile(botX - 1,botY).fg == seed and getTile(botX - 1,botY).ready do
+    if getTile(botX - 1,botY).fg == seed and getTile(botX - 1,botY).ready then
         punch(-1,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    while getTile(botX,botY).fg == seed and getTile(botX,botY).ready do
+    if getTile(botX,botY).fg == seed and getTile(botX,botY).ready then
         punch(0,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    while getTile(botX + 1,botY).fg == seed and getTile(botX + 1,botY).ready do
+    if getTile(botX + 1,botY).fg == seed and getTile(botX + 1,botY).ready then
         punch(1,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    while getTile(botX + 2,botY).fg == seed and getTile(botX + 2,botY).ready do
+    if getTile(botX + 2,botY).fg == seed and getTile(botX + 2,botY).ready then
         punch(2,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
@@ -112,6 +112,7 @@ setting.tilept = function(threads)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
 end
+
 for i =  1,farmperbot do
     table.insert(worlds,worldfarm[math.floor((indexbot - 1) * farmperbot + i)])
 end
