@@ -86,51 +86,37 @@ end
 setting.tilept = function(threads)
     botX = math.floor(getBot().x / 32)
     botY = math.floor(getBot().y / 32)
-    local count = 0
-    while getTile(botX - 2,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
-        place(seed,-2,0)
-        sleep(delayplant)
-        setting.reconnect(threads,doorfarm,botX,botY)
-        count = count + 1
-        if count == 3 then
-            break
+    for i = 1,2 do
+        if getTile(botX - 2,botY).fg ~= seed then
+            place(seed,-2,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
         end
-    end
-    while getTile(botX - 1,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
-        place(seed,-1,0)
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,botX,botY)
-        count = count + 1
-        if count == 3 then
-            break
+        if getTile(botX - 1,botY).fg ~= seed then
+            place(seed,-1,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
         end
-    end
-    while getTile(botX,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
-        place(seed,0,0)
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,botX,botY)
-        count = count + 1
-        if count == 3 then
-            break
+        if getTile(botX,botY).fg ~= seed then
+            place(seed,0,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
         end
-    end
-    while getTile(botX + 1,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
-        place(seed,1,0)
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,botX,botY)
-        count = count + 1
-        if count == 3 then
-            break
+        if getTile(botX + 1,botY).fg ~= seed then
+            place(seed,1,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
         end
-    end
-    while getTile(botX + 2,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
-        place(seed,2,0)
         sleep(delayplant)
-        setting.reconnect(threads,doorfarm,botX,botY)
-        count = count + 1
-        if count == 3 then
-            break
+        if getTile(botX + 2,botY).fg ~= seed then
+            place(seed,2,0)
+            sleep(delayplant)
+            setting.reconnect(threads,doorfarm,botX,botY)
         end
+        sleep(delayplant)
     end
 end
 
