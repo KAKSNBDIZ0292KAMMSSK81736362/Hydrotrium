@@ -61,26 +61,31 @@ setting.tileht = function(threads)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayharvest)
     if getTile(botX - 1,botY).fg == seed and getTile(botX - 1,botY).ready then
         punch(-1,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayharvest)
     if getTile(botX,botY).fg == seed and getTile(botX,botY).ready then
         punch(0,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayharvest)
     if getTile(botX + 1,botY).fg == seed and getTile(botX + 1,botY).ready then
         punch(1,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayharvest)
     if getTile(botX + 2,botY).fg == seed and getTile(botX + 2,botY).ready then
         punch(2,0)
         sleep(delayharvest)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayharvest)
 end
 
 setting.tilept = function(threads)
@@ -91,28 +96,32 @@ setting.tilept = function(threads)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayplant)
     if getTile(botX - 1,botY).fg ~= seed then
         place(seed,-1,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayplant)
     if getTile(botX,botY).fg ~= seed then
         place(seed,0,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayplant)
     if getTile(botX + 1,botY).fg ~= seed then
         place(seed,1,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayplant)
     if getTile(botX + 2,botY).fg ~= seed then
         place(seed,2,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
+    sleep(delayplant)
 end
-
 for i =  1,farmperbot do
     table.insert(worlds,worldfarm[math.floor((indexbot - 1) * farmperbot + i)])
 end
