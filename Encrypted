@@ -101,12 +101,12 @@ setting.tilept = function(threads)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    while getTile(botX + 1,botY).fg ~= and getTile(botX,botY + 1).flags ~= 0 seed do
+    while getTile(botX + 1,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
         place(seed,1,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
     end
-    while getTile(botX + 2,botY).fg ~= and getTile(botX,botY + 1).flags ~= 0 seed do
+    while getTile(botX + 2,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
         place(seed,2,0)
         sleep(delayplant)
         setting.reconnect(threads,doorfarm,botX,botY)
