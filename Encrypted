@@ -743,7 +743,7 @@ setting.warp = function(world,door)
         while getBot().world ~= string.upper(world) and not nuked and not subserver do
             while getBot().status ~= "online" do
                 connect()
-                sleep(delaywarp)
+                sleep(delayreconnect)
                 if getBot().status == "suspended" or getBot().status == "banned" then
                     if backupwhensuspend then
                         removeBot(getBot().name)
