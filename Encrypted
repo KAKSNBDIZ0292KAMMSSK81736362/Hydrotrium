@@ -56,74 +56,60 @@ end
 setting.tileht = function(threads)
     botX = math.floor(getBot().x / 32)
     botY = math.floor(getBot().y / 32)
-    for i = 1, 2 do
-        if getTile(botX - 2,botY).fg == seed then
-            punch(-2,0)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+    while getTile(botX - 2,botY).fg == seed and getTile(botX - 2,botY).ready do
+        punch(-2,0)
         sleep(delayharvest)
-        if getTile(botX - 1,botY).fg == seed then
-            punch(-1,0)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX - 1,botY).fg == seed and getTile(botX - 1,botY).ready do
+        punch(-1,0)
         sleep(delayharvest)
-        if getTile(botX,botY).fg == seed then
-            punch(0,0)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX,botY).fg == seed and getTile(botX,botY).ready do
+        punch(0,0)
         sleep(delayharvest)
-        if getTile(botX + 1,botY).fg == seed then
-            punch(1,0)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX + 1,botY).fg == seed and getTile(botX + 1,botY).ready do
+        punch(1,0)
         sleep(delayharvest)
-        if getTile(botX + 2,botY).fg == seed  then
-            punch(2,0)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX + 2,botY).fg == seed and getTile(botX + 2,botY).ready do
+        punch(2,0)
         sleep(delayharvest)
+        setting.reconnect(threads,doorfarm,botX,botY)
     end
 end
 
 setting.tilept = function(threads)
     botX = math.floor(getBot().x / 32)
     botY = math.floor(getBot().y / 32)
-    for i = 1,2 do
-        if getTile(botX - 2,botY).fg ~= seed then
-            place(seed,-2,0)
-            sleep(delayplant)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+    while getTile(botX - 2,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
+        place(seed,-2,0)
         sleep(delayplant)
-        if getTile(botX - 1,botY).fg ~= seed then
-            place(seed,-1,0)
-            sleep(delayplant)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX - 1,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
+        place(seed,-1,0)
         sleep(delayplant)
-        if getTile(botX,botY).fg ~= seed then
-            place(seed,0,0)
-            sleep(delayplant)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX,botY).fg ~= seed and getTile(botX,botY + 1).flags ~= 0 do
+        place(seed,0,0)
         sleep(delayplant)
-        if getTile(botX + 1,botY).fg ~= seed then
-            place(seed,1,0)
-            sleep(delayplant)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX + 1,botY).fg ~= and getTile(botX,botY + 1).flags ~= 0 seed do
+        place(seed,1,0)
         sleep(delayplant)
-        if getTile(botX + 2,botY).fg ~= seed then
-            place(seed,2,0)
-            sleep(delayplant)
-            setting.reconnect(threads,doorfarm,botX,botY)
-        end
+        setting.reconnect(threads,doorfarm,botX,botY)
+    end
+    while getTile(botX + 2,botY).fg ~= and getTile(botX,botY + 1).flags ~= 0 seed do
+        place(seed,2,0)
         sleep(delayplant)
+        setting.reconnect(threads,doorfarm,botX,botY)
     end
 end
 
