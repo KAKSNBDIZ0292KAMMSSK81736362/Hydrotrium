@@ -1881,19 +1881,17 @@ setting.rechecking = function(threads)
             end
         end
     end
-            for _, tile in pairs(getTiles()) do
-                if tile.fg == block or tile.bg == block then
-                    findPath(tile.x,tile.y)
-                    setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                    while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).bg == block or getTile(math.floor(getBot().x / 32), math.floor(getBot().y / 32)).fg == block do
-                        punch(0,0)
-                        sleep(delaypunch)
-                        setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                    end
-                    collect(3)
-                    sleep(30)
-                end
+    for _, tile in pairs(getTiles()) do
+        if tile.fg == block or tile.bg == block then
+            findPath(tile.x,tile.y)
+            setting.reconnect(threads,doorfarm,tile.x,tile.y)
+            while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).bg == block or getTile(math.floor(getBot().x / 32), math.floor(getBot().y / 32)).fg == block do
+                punch(0,0)
+                sleep(delaypunch)
+                setting.reconnect(threads,doorfarm,tile.x,tile.y)
             end
+            collect(3)
+            sleep(30)
         end
     end
     if not dontplant then
