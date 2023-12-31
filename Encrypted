@@ -206,13 +206,13 @@ setting.backupacc = function(threads)
         if proxy then
             if typeaccount == "guest" then
                 if macposition == "left" then
-                    addBot(find,true,num)
+                    addBot(trx,true,num)
                     sleep(1000)
                     setMac(thread)
                     setRid(threading)
                     connect()
                 elseif macposition == "right" then
-                    addBot(find,true,num)
+                    addBot(trx,true,num)
                     sleep(1000)
                     setMac(threading)
                     setRid(thread)
@@ -225,13 +225,13 @@ setting.backupacc = function(threads)
         else
             if typeaccount == "guest" then
                 if macposition == "left" then
-                    addBot(find)
+                    addBot(trx)
                     sleep(1000)
                     setMac(thread)
                     setRid(threading)
                     connect()
                 elseif macposition == "right" then
-                    addBot(find)
+                    addBot(trx)
                     sleep(1000)
                     setMac(threading)
                     setRid(thread)
@@ -298,7 +298,7 @@ setting.backupacc = function(threads)
             while getBot().status ~= "online" do
                 connect()
                 sleep(delayreconnect)
-                if getBot().status == "suspended" or getBot().status == "banned" or getBot().status == "got captcha" or getBot().status == "temporary ban" then
+                if getBot().status == "suspended" or getBot().status == "banned" or getBot().status == "got captcha" then
                     setting.botinfo("Bot backup : [ "..getBot().name.." ] status is "..getBot().status..", Terminated script @everyone")
                     setting.writeFile("botbackupstatus","[ "..getMac()..""..symbol..""..getRid().." ] status is "..getBot().status.."")
                     removeBot(getBot().name)
