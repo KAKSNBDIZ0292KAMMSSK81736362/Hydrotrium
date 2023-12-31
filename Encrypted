@@ -451,8 +451,6 @@ setting.checkaccount = function(threads)
         setting.storingseeds(threads)
     end
     if backuplevel then
-        removeBot(getBot().name)
-        sleep(2000)
         setting.backupacc(threads)
     else
         if pnbother then
