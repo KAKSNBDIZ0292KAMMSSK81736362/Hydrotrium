@@ -2084,7 +2084,7 @@ setting.harvest = function(threads)
     setJob("Harvesting")
     ::BACK::
     for _, tile in pairs(getTiles()) do
-        if tile.fg == seed and tile.ready then
+        if getTile(tile.x,tile.y).fg == seed and getTile(tile.x,tile.y).ready then
             findPath(tile.x+1,tile.y)
             sleep(50)
             setting.reconnect(threads,doorfarm,tile.x+1,tile.y)
@@ -2177,7 +2177,7 @@ end
 setting.plant = function(threads)
     setJob("Planting")
     for _, tile in pairs(getTiles()) do
-        if tile.fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(seed) ~= 0 then
+        if getTile(tile.x,tile.y).fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(seed) ~= 0 then
             findPath(tile.x+1,tile.y)
             sleep(25)
             setting.reconnect(threads,doorfarm,tile.x+1,tile.y)
