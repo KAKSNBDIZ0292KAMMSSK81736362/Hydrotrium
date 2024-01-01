@@ -2086,6 +2086,7 @@ setting.harvest = function(threads)
         if tile.fg == seed and tile.ready then
             findPath(tile.x+1,tile.y)
             sleep(50)
+            setting.reconnect(threads,doorfarm,tile.x+1,tile.y)
             if tile.fg == seed then
                 setting.tileht(threads)
             end
@@ -2178,7 +2179,7 @@ setting.plant = function(threads)
         if tile.fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(seed) ~= 0 then
             findPath(tile.x+1,tile.y)
             sleep(25)
-            setting.reconnect(threads,doorfarm,tile.x+2,tile.y)
+            setting.reconnect(threads,doorfarm,tile.x+1,tile.y)
             if tile.fg ~= seed then
                 setting.tilept(threads)
             end
