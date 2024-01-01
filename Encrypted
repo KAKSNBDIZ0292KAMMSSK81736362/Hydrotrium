@@ -844,17 +844,18 @@ setting.breakjammers = function()
     for _, idx in pairs(sjam) do
         setJob("Take back jammer")
         setting.warp(idx,"")
+        setting.reconnect(idx,"")
         while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 do
             move(1,0)
             sleep(500)
         end
-        setting.reconnect(idx,"")
         if not failwarp then
             if not subserver then
                 if not nuked then
                     while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32) - 1).fg == 226 do
                         punch(0,-1)
                         sleep(delaypunch)
+                        setting.reconnect(idx,"",math.floor(getBot().x / 32),math.floor(getBot().y / 32))
                     end
                 else
                     nuked = false
