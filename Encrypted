@@ -451,8 +451,8 @@ setting.checkaccount = function(threads)
         setting.storingseeds(threads)
     end
     if backuplevel then
-	removeBot(getBot().name)
-	sleep(2000)
+        removeBot(getBot().name)
+        sleep(2000)
         setting.backupacc(threads)
     else
         if pnbother then
@@ -2105,7 +2105,7 @@ setting.harvest = function(threads)
     setJob("Harvesting")
     ::BACK::
     for _, tile in pairs(getTiles()) do
-        if getTile(tile.x,tile.y).fg == seed and getTile(tile.x,tile.y).ready then
+        if tile.fg == seed and tile.ready then
             if getBot().level >= maxlevel and backuplevel then
                 setting.checkaccount(threads)
                 setJob("Harvesting")
@@ -2198,7 +2198,7 @@ end
 setting.plant = function(threads)
     setJob("Planting")
     for _, tile in pairs(getTiles()) do
-        if getTile(tile.x,tile.y).fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(seed) ~= 0 then
+        if tile.fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(seed) ~= 0 then
             findPath(tile.x+2,tile.y)
             sleep(25)
             setting.reconnect(threads,doorfarm,tile.x+2,tile.y)
