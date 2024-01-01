@@ -2271,6 +2271,18 @@ elseif license == "" or license:find("%s") or setting.infolic("C:\\Users\\" .. u
     print("Input ur valid license")
     error()
 end
+::SUCK::
+if findItem(9640) > 0 then
+    ::SUCK::
+    setting.warp(getBot().name,"")
+    while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32) - 1).fg ~= 9640 do
+        place(9640,0,-1)
+        sleep(delayplace)
+    end
+    if findItem(9640) > 0 then
+        goto SUCK
+    end
+end
 ::Check::
 if findItem(98) == 0 and pickaxe and getBot().status == "online" then
     setting.takepickaxe()
