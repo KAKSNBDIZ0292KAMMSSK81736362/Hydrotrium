@@ -2271,7 +2271,6 @@ elseif license == "" or license:find("%s") or setting.infolic("C:\\Users\\" .. u
     print("Input ur valid license")
     error()
 end
-::SUCK::
 if findItem(9640) > 0 then
     ::SUCK::
     setting.warp(getBot().name,"")
