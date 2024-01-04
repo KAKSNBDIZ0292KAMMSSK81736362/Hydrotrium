@@ -10,6 +10,7 @@ setBool("Auto Reconnect",false)
 setBool("Show Place Hand",false)
 setBool("Show Punch Hand",false)
 tilebreak = {}
+tileDirt = {}
 infoid = {}
 worlds = {}
 backups = {}
@@ -37,6 +38,89 @@ eventY = dropeventY - 1
 posX = customBreakX - 1
 posY = customBreakY - 1
 seed = block + 1
+
+setting.wordsrandom = function()
+    local random = {
+        "Cuma senyuman doang, udah bikin gemes.",
+        "Bentar lagi uda jarang ni lu nongkrong di sini.",
+        "Kita ngapain sih, ikut-ikutan heboh?",
+        "Gue tuh selalu berusaha baik, tapi gimana ya.",
+        "Gak usah diambil pusing, santai aja dulu.",
+        "Jangan sok asik, tuh keliatan banget.",
+        "Santai aja dulu, gak usah tegang.",
+        "Jangan bawa drama-dramaan, capek.",
+        "Gak usah dibawa serius, nanti malah stress.",
+        "Gue tuh kalem, gak usah ribut.",
+        "Lagi asik nongkrong, ada yang ngomongin.",
+        "Buat apa pake jaim-jaim, santai aja.",
+        "Lagi asik main game, tiba-tiba ada yang gangguin.",
+        "Gak usah sok asik, keliatan banget.",
+        "Nggak perlu pake baper, gak ada gunanya.",
+        "Gue gak peduliin, tinggalin aja.",
+        "Santai aja dulu, gak usah terlalu serius.",
+        "Nggak usah diambil pusing, biar enak.",
+        "Hati-hati, banyak orang munafik.",
+        "Lagi pada heboh semua, bikin geger.",
+        "Gak usah pake jaim-jaim, santai aja.",
+        "Lagi dengerin lagu enak, bawaannya pengen joget.",
+        "Nih, lagi pada rame-rame di tempat baru.",
+        "Gue tuh kalem, gak perlu ribut.",
+        "Udah capek-capek ngomong, gak dengerin juga.",
+        "Asik banget nih, liburan seru.",
+        "Gak usah sok asik, keliatan banget.",
+        "Bentar lagi weekend, pasti seru banget nih.",
+        "Cuma bisa doa aja, gimana lagi.",
+        "Lagi asik main, ada yang gangguin.",
+        "Gue gak peduliin, tinggalin aja.",
+        "Lagi mikirin, gak usah bener-bener serius.",
+        "Jangan dibawa serius, nanti malah stress.",
+        "Kondisi lagi kacau, gak karuan banget.",
+        "Nih, jualan makanan enak banget di sini.",
+    }
+    local idx = math.random(1, #random)
+    local words = random[idx]
+    say(words)
+    sleep(2000)
+end
+
+setting.tutorial = function()
+    local str = ""
+    addHook("onvariant","tutor",function(var)
+        if var[0] == "OnDialogRequest" then
+            if string.find(var[1],"myWorldsUiTab") then
+                local idx = string.lower(string.match(var[1], 'add_button|(%w+)|'))
+                str = str .. idx
+            end
+        end
+    end)
+    sendPacket("action|wrench\n|netid|"..getBot().netId,2)
+    sleep(1000)
+    sendPacket("action|dialog_return\ndialog_name|popup\nnetID|"..getBot().netId.."|\nbuttonClicked|my_worlds",2)
+    sleep(1000)
+    return str
+end
+
+letter = 10
+withnumber = true
+setting.generate = function()
+    local alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local withnum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local generate = ""
+    for i = 1,letter do
+        local random = math.random(1,#alphabet)
+        local randomnumber = math.random(1,#withnum)
+        local acakalpa = string.sub(alphabet,random,random)
+        local acaknomor = string.sub(withnum,randomnumber,randomnumber)
+        if withnumber then
+            generate = generate..acaknomor
+        else
+            generate = generate..acakalpa
+        end
+    end
+    return generate
+end
+local find = setting.tutorial()
+local trx = setting.generate()
 
 setting.split = function(str, ptr)
     if not ptr then 
@@ -206,44 +290,24 @@ for x = 0, math.ceil(pnbtile/2) - 1 do
     table.insert(tilebreak,x)
 end
 
-setting.tutorial = function()
-    local str = ""
-    addHook("onvariant","tutor",function(var)
-        if var[0] == "OnDialogRequest" then
-            if string.find(var[1],"myWorldsUiTab") then
-                local idx = string.lower(string.match(var[1], 'add_button|(%w+)|'))
-                str = str .. idx
-            end
-        end
-    end)
-    sendPacket("action|wrench\n|netid|"..getBot().netId,2)
-    sleep(1000)
-    sendPacket("action|dialog_return\ndialog_name|popup\nnetID|"..getBot().netId.."|\nbuttonClicked|my_worlds",2)
-    sleep(1000)
-    return str
+intent = 5
+for i = math.floor(intent/2),1,-1 do
+    i = i * -1
+    table.insert(tileDirt,i)
 end
 
-letter = 10
-withnumber = true
-setting.generate = function()
-    local alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    local withnum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    local generate = ""
-    for i = 1,letter do
-        local random = math.random(1,#alphabet)
-        local randomnumber = math.random(1,#withnum)
-        local acakalpa = string.sub(alphabet,random,random)
-        local acaknomor = string.sub(withnum,randomnumber,randomnumber)
-        if withnumber then
-            generate = generate..acaknomor
-        else
-            generate = generate..acakalpa
+for i = 0, math.ceil(intent/2) - 1 do
+    table.insert(tileDirt,i)
+end
+
+setting.punchdirt = function(x,y)
+    for _,num in pairs(tileDirt) do
+        if getTile(x + 1,y + num).bg ~= 0 then
+            return true
         end
     end
-    return generate
+    return false
 end
-local find = setting.tutorial()
-local trx = setting.generate()
 
 setting.punchitem = function(x,y)
     for _,tilepunch in pairs(tilebreak) do
@@ -427,6 +491,7 @@ setting.backupacc = function(threads)
     if findItem(9640) > 0 then
         ::SUCK::
         setting.warp(getBot().name,"")
+        setting.wordsrandom()
         while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32) - 1).fg ~= 9640 do
             place(9640,0,-1)
             sleep(delayplace)
@@ -544,6 +609,60 @@ setting.checkaccount = function(threads)
     end
 end
 
+setting.indexdirt = function()
+    if getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 then
+        ::mtc::
+        if math.floor(getBot().x / 32) ~= 48 or math.floor(getBot().y / 32) ~= 23 then
+            move(1,0)
+            sleep(150)
+            setting.reconnect(find,"",math.floor(getBot().x / 32),math.floor(getBot().y / 32))
+            goto mtc
+        end
+    end
+    botX = math.floor(getBot().x / 32)
+    botY = math.floor(getBot().y / 32)
+    for w = 1,34 do
+        if getTile(1,w).bg == 14 or getTile(1,w).fg == 2 or getTile(1,w).bg == 14 or getTile(1,w).fg == 2 then
+            while getTile(1,w).bg == 14 or getTile(1,w).fg == 2 do
+                findPath(1,w-1)
+                punch(0,1)
+                sleep(delaypunch)
+                setting.reconnect(find,"",botX,botY)
+            end
+            while getTile(0,w).bg == 14 or getTile(0,w).fg == 2 do
+                punch(-1,1)
+                sleep(delaypunch)
+                setting.reconnect(find,"",botX,botY)
+            end
+            if getBot().level >= 5 then
+                break
+            end
+        end
+    end
+    for x = 2, 98 do
+        if getTile(x, 27).bg == 14 and getTile(x, 27).fg ~= 0 then
+            findPath(x - 1, 27)
+            sleep(100)
+            setting.reconnect(find,"",botX,botY)
+            setting.dirt27()
+            if getBot().level >= 5 then
+                break
+            end
+        end
+    end
+    for x = 2, 98 do
+        if getTile(x, 32).bg == 14 and getTile(x, 32).fg ~= 0 then
+            findPath(x - 1, 32)
+            sleep(100)
+            setting.reconnect(find,"",botX,botY)
+            setting.dirt27()
+        end
+        if getBot().level >= 5 then
+            break
+        end
+    end
+end
+
 setting.webhookinfo = function()
 	if botinfo then
         local text = [[
@@ -648,21 +767,38 @@ setting.reconnect = function(world,id,x,y)
                 end
             end
         end
-        if id ~= "" then
-            local stucks = 0
-            while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 do
-                sendPacket("action|join_request\nname|" ..world:upper().."|"..id:upper().."\ninvitedWorld|0", 3)
-                sleep(delaywarp)
-                if stucks > 3 then
-                    setting.botinfo("[ "..getBot().name.." ] Failed to reconnecting bot, stuck at white door. Terminated script @everyone")
-                    error()
+        if not pnbother then
+            if id ~= "" then
+                local stucks = 0
+                while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 do
+                    sendPacket("action|join_request\nname|" ..world:upper().."|"..id:upper().."\ninvitedWorld|0", 3)
+                    sleep(delaywarp)
+                    if stucks > 3 then
+                        setting.botinfo("[ "..getBot().name.." ] Failed to reconnecting bot, stuck at white door. Terminated script @everyone")
+                        error()
+                    end
                 end
             end
-        end
-        if x and y then
-            while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
-                findPath(x,y)
-                sleep(150)
+            if x and y then
+                while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
+                    findPath(x,y)
+                    sleep(150)
+                end
+            end
+        else
+            if getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 then
+                ::mtc::
+                if math.floor(getBot().x / 32) ~= 48 or math.floor(getBot().y / 32) ~= 23 then
+                    move(1,0)
+                    sleep(150)
+                    goto mtc
+                end
+            end
+            if x and y then
+                while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
+                    findPath(x,y)
+                    sleep(150)
+                end
             end
         end
         setting.botinfo("[ "..getBot().name.." ] success to joining world @everyone")
@@ -700,41 +836,76 @@ setting.reconnect = function(world,id,x,y)
                 end
             end
         end
-        if id ~= "" then
-            local stuckk = 0
-            while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 do
-                sendPacket("action|join_request\nname|" ..world:upper().."|"..id:upper().."\ninvitedWorld|0", 3)
-                sleep(delaywarp)
-                if stuckk > 3 then
-                    setting.botinfo("[ "..getBot().name.." ] Failed to reconnecting bot, stuck at white door. Terminated script @everyone")
-                    error()
+        if not pnbother then
+            if id ~= "" then
+                local stucks = 0
+                while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 do
+                    sendPacket("action|join_request\nname|" ..world:upper().."|"..id:upper().."\ninvitedWorld|0", 3)
+                    sleep(delaywarp)
+                    if stucks > 3 then
+                        setting.botinfo("[ "..getBot().name.." ] Failed to reconnecting bot, stuck at white door. Terminated script @everyone")
+                        error()
+                    end
                 end
             end
-        end
-        if x and y then
-            while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
-                findPath(x,y)
-                sleep(150)
+            if x and y then
+                while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
+                    findPath(x,y)
+                    sleep(150)
+                end
+            end
+        else
+            if getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 then
+                ::mtc::
+                if math.floor(getBot().x / 32) ~= 48 or math.floor(getBot().y / 32) ~= 23 then
+                    move(1,0)
+                    sleep(150)
+                    goto mtc
+                end
+            end
+            if x and y then
+                while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
+                    findPath(x,y)
+                    sleep(150)
+                end
             end
         end
         setting.botinfo("[ "..getBot().name.." ] status is "..getBot().status.." @everyone")
     end
     if getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 then
         setting.botinfo("[ "..getBot().name.." ] Stuck at white door ! @everyone")
-        local stuck = 0
-        if id ~= "" then
-            while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 do
-                sendPacket("action|join_request\nname|" ..world:upper().."|"..id:upper().."\ninvitedWorld|0", 3)
-                sleep(delaywarp)
-                if stuck > 3 then
-                    setting.botinfo("[ "..getBot().name.." ] Failed to reconnecting bot, stuck at white door. Terminated script @everyone")
+        if not pnbother then
+            if id ~= "" then
+                local stucks = 0
+                while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 do
+                    sendPacket("action|join_request\nname|" ..world:upper().."|"..id:upper().."\ninvitedWorld|0", 3)
+                    sleep(delaywarp)
+                    if stucks > 3 then
+                        setting.botinfo("[ "..getBot().name.." ] Failed to reconnecting bot, stuck at white door. Terminated script @everyone")
+                        error()
+                    end
                 end
             end
-        end
-        if x and y then
-            while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
-                findPath(x,y)
-                sleep(150)
+            if x and y then
+                while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
+                    findPath(x,y)
+                    sleep(150)
+                end
+            end
+        else
+            if getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).fg == 6 then
+                ::mtc::
+                if math.floor(getBot().x / 32) ~= 48 or math.floor(getBot().y / 32) ~= 23 then
+                    move(1,0)
+                    sleep(150)
+                    goto mtc
+                end
+            end
+            if x and y then
+                while math.floor(getBot().x / 32) ~= x or math.floor(getBot().y / 32) ~= y do
+                    findPath(x,y)
+                    sleep(150)
+                end
             end
         end
         setting.botinfo("[ "..getBot().name.." ] Already back to pos ! @everyone")
@@ -894,6 +1065,7 @@ setting.joinworld = function()
         ::BACK::
         setJob("Clearing history")
         setting.warp(world,"")
+        setting.wordsrandom()
         move(1,0)
         sleep(250)
         setting.reconnect(world,"")
@@ -933,6 +1105,7 @@ setting.takepickaxe = function()
     door = setting.split(worldpickaxe[index],"[^:]+")[2]
     setJob("Take pickaxe")
     setting.warp(world,door)
+    setting.wordsrandom()
     if not failwarp then
         if not subserver then
             if not nuked then
@@ -996,6 +1169,7 @@ setting.takingseed = function(threads)
         setJob("Take seed")
         world = worldseed[i]
         setting.warp(world,doorworldseed)
+        setting.wordsrandom()
         setting.webhookinfo()
         if not failwarp then
             if not subserver then
@@ -1088,6 +1262,7 @@ setting.support = function()
     world = setting.split(worlditemtowear[index],"[^:]+")[1]
     door = setting.split(worlditemtowear[index],"[^:]+")[2]
     setting.warp(world,door)
+    setting.wordsrandom()
     setting.webhookinfo()
     if not failwarp then
         if not subserver then
@@ -1155,6 +1330,7 @@ setting.storingevents = function(threads)
         setJob("Dropping events")
         world = worldevent[i]
         setting.warp(world,doorworldevent)
+        setting.wordsrandom()
         setting.webhookinfo()
         if not failwarp then
             if not subserver then
@@ -1295,12 +1471,27 @@ setting.storingevents = function(threads)
     end
 end
 
+setting.dirt27 = function()
+    botX = math.floor(getBot().x / 32)
+    botY = math.floor(getBot().y / 32)
+    while setting.punchdirt(botX,botY) do
+        for _,i in pairs(tileDirt) do
+            if getTile(botX + 1,botY + i).bg ~= 0 then
+                punch(1,i)
+                sleep(delaypunch)
+                setting.reconnect(find,"",botX,botY)
+            end
+        end
+    end
+end
+
 setting.storingpacks = function(threads)
     for i = setting.pack , #worldpack do
         ::Here::
         setJob("Dropping packs")
         world = worldpack[i]
         setting.warp(world,doorworldpack)
+        setting.wordsrandom()
         setting.webhookinfo()
         if not failwarp then
             if not subserver then
@@ -1447,6 +1638,7 @@ setting.storingseeds = function(threads)
         world = worldseed[i]
         setJob("Dropping seeds")
         setting.warp(world,doorworldseed)
+        setting.wordsrandom()
         setting.webhookinfo()
         if not failwarp then
             if not subserver then
@@ -1587,6 +1779,7 @@ setting.rotate = function(threads,static,blockid)
                     setting.checkaccount(threads)
                     setJob("Pnb")
                     setting.warp(threads,static)
+                    setting.wordsrandom()
                     setting.webhookinfo()
                     goto BACK
                 end
@@ -1595,6 +1788,7 @@ setting.rotate = function(threads,static,blockid)
                     setting.storingpacks(threads)
                     setJob("Pnb")
                     setting.warp(threads,static)
+                    setting.wordsrandom()
                     goto BACK
                 end
             end
@@ -1624,6 +1818,7 @@ setting.rotate = function(threads,static,blockid)
                     setting.checkaccount(threads)
                     setJob("Pnb")
                     setting.warp(threads,static)
+                    setting.wordsrandom()
                     setting.webhookinfo()
                     goto BACK
                 end
@@ -1632,6 +1827,7 @@ setting.rotate = function(threads,static,blockid)
                     setting.storingpacks(threads)
                     setJob("Pnb")
                     setting.warp(threads,static)
+                    setting.wordsrandom()
                     setting.webhookinfo()
                     goto BACK
                 end
@@ -1641,6 +1837,7 @@ setting.rotate = function(threads,static,blockid)
         ::BACK::
         setJob("PNB")
         setting.warp(find,"")
+        setting.wordsrandom()
         setting.webhookinfo()
         if not failwarp then
             if not subserver then
@@ -1789,6 +1986,7 @@ setting.rechecking = function(threads)
                 setting.support()
                 setJob("Rechecking")
                 setting.warp(threads,doorfarm)
+                setting.wordsrandom()
                 setting.webhookinfo()
             end
         end
@@ -1799,6 +1997,7 @@ setting.rechecking = function(threads)
                         setting.rotate(threads,doorfarm,block)
                         setJob("Rechecking")
                         setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
                         setting.webhookinfo()
                     else
                         setting.rotate(threads,doorfarm,block)
@@ -1809,6 +2008,7 @@ setting.rechecking = function(threads)
                     setting.rotate(threads,doorfarm,block)
                     setJob("Rechecking")
                     setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
                     setting.webhookinfo()
                 else
                     setting.rotate(threads,doorfarm,block)
@@ -1819,12 +2019,14 @@ setting.rechecking = function(threads)
             setting.storingevents(threads)
             setJob("Rechecking")
             setting.warp(threads,doorfarm)
+            setting.wordsrandom()
             setting.webhookinfo()
         elseif findItem(seed) >= amountseed then
             if dontplant then
                 setting.storingseeds(threads)
                 setJob("Rechecking")
                 setting.warp(threads,doorfarm)
+                setting.wordsrandom()
                 setting.webhookinfo()
             else
                 setting.plant(threads,doorfarm,seed)
@@ -1835,6 +2037,7 @@ setting.rechecking = function(threads)
             setting.storingpacks(threads)
             setJob("Rechecking")
             setting.warp(threads,doorfarm)
+            setting.wordsrandom()
             setting.webhookinfo()
         end
     end
@@ -1857,6 +2060,7 @@ setting.rechecking = function(threads)
                             setting.rotate(threads,doorfarm,block)
                             setJob("Rechecking")
                             setting.warp(threads,doorfarm)
+                            setting.wordsrandom()
                             setting.webhookinfo()
                         else
                             setting.rotate(threads,doorfarm,block)
@@ -1866,12 +2070,14 @@ setting.rechecking = function(threads)
                         setting.storingevents(threads)
                         setJob("Rechecking")
                         setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
                         setting.webhookinfo()
                     elseif findItem(seed) >= amountseed then
                         if dontplant then
                             setting.storingseeds(threads)
                             setJob("Rechecking")
                             setting.warp(threads,doorfarm)
+                            setting.wordsrandom()
                             setting.webhookinfo()
                         else
                             setting.plant(threads,doorfarm,seed)
@@ -1882,6 +2088,7 @@ setting.rechecking = function(threads)
                         setting.storingpacks(threads)
                         setJob("Rechecking")
                         setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
                         setting.webhookinfo()
                     end
                 end
@@ -1905,6 +2112,7 @@ setting.rechecking = function(threads)
                         setting.rotate(threads,doorfarm,block)
                         setJob("Rechecking")
                         setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
                         setting.webhookinfo()
                     else
                         setting.rotate(threads,doorfarm,block)
@@ -1914,12 +2122,14 @@ setting.rechecking = function(threads)
                     setting.storingevents(threads)
                     setJob("Rechecking")
                     setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
                     setting.webhookinfo()
                 elseif findItem(seed) >= amountseed then
                     if dontplant then
                         setting.storingseeds(threads)
                         setJob("Rechecking")
                         setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
                         setting.webhookinfo()
                     else
                         setting.plant(threads,doorfarm,seed)
@@ -1930,6 +2140,7 @@ setting.rechecking = function(threads)
                     setting.storingpacks(threads)
                     setJob("Rechecking")
                     setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
                     setting.webhookinfo()
                 end
             end
@@ -1984,6 +2195,7 @@ setting.rechecking = function(threads)
                 setting.takingseed(threads)
                 setJob("Rechecking")
                 setting.warp(threads,doorfarm)
+                setting.wordsrandom()
                 setting.webhookinfo()
                 if findItem(seed) ~= 0 then 
                     goto BACK
@@ -1996,14 +2208,15 @@ setting.rechecking = function(threads)
             setting.storingseeds(threads)
             setJob("Rechecking")
             setting.warp(threads,doorfarm)
+            setting.wordsrandom()
             setting.webhookinfo()
         end
     end
 end
 
 setting.harvest = function(threads)
-    setJob("Harvesting")
     ::BACK::
+    setJob("Harvesting")
     for idx = 1,53 do
         if getTile(97,idx).fg == seed and getTile(97,idx).ready then
             findPath(97,idx)
@@ -2015,16 +2228,20 @@ setting.harvest = function(threads)
         end
     end
     for _, tile in pairs(getTiles()) do
-        local count = 0
+        if tile.fg == 6 then
+            if getTile(tile.x - 4, tile.y).fg == seed then
+                findPath(tile.x - 4,tile.y)
+                sleep(delayharvest)
+                setting.reconnect(threads,doorfarm,tile.x - 4,tile.y)
+                setting.tileht(threads,doorfarm,seed)
+            end
+        end
+    end
+    for _, tile in pairs(getTiles()) do
         if getTile(tile.x,tile.y).fg == seed and getTile(tile.x,tile.y).ready then
             findPath(tile.x+2,tile.y)
             sleep(delayharvest)
             setting.reconnect(threads,doorfarm,tile.x+2,tile.y)
-            if count >= 3 then
-                findPath(tile.x,tile.y)
-                sleep(delayharvest)
-                setting.reconnect(threads,doorfarm,tile.x,tile.y)
-            end
             if tile.fg == seed then
                 setting.tileht2(threads,doorfarm,seed)
             end
@@ -2039,6 +2256,7 @@ setting.harvest = function(threads)
             setting.checkaccount(threads)
             setJob("Harvesting")
             setting.warp(threads,doorfarm)
+            setting.wordsrandom()
             setting.webhookinfo()
             goto BACK
         end
@@ -2047,6 +2265,7 @@ setting.harvest = function(threads)
                 setting.rotate(threads,"",block)
                 setJob("Harvesting")
                 setting.warp(threads,doorfarm)
+                setting.wordsrandom()
                 setting.webhookinfo()
                 goto BACK
             else
@@ -2059,6 +2278,7 @@ setting.harvest = function(threads)
                 setting.support()
                 setJob("Harvesting")
                 setting.warp(threads,doorfarm)
+                setting.wordsrandom()
                 setting.webhookinfo()
                 goto BACK
             end
@@ -2067,6 +2287,7 @@ setting.harvest = function(threads)
             setting.storingevents(threads)
             setJob("Harvesting")
             setting.warp(threads,doorfarm)
+            setting.wordsrandom()
             setting.webhookinfo()
             goto BACK
         elseif findItem(seed) > amountseed then
@@ -2074,6 +2295,7 @@ setting.harvest = function(threads)
                 setting.storingseeds(threads)
                 setJob("Harvesting")
                 setting.warp(threads,doorfarm)
+                setting.wordsrandom()
                 setting.webhookinfo()
                 goto BACK
             else
@@ -2086,6 +2308,7 @@ setting.harvest = function(threads)
             setting.storingpacks(threads)
             setJob("Harvesting")
             setting.warp(threads,doorfarm)
+            setting.wordsrandom()
             setting.webhookinfo()
             goto BACK
         end
@@ -2112,6 +2335,7 @@ setting.levelingcek = function(threads)
                     setting.rotate(threads,doorworldleveling,idblockleveling)
                     setJob("Rechecking")
                     setting.warp(threads,doorworldleveling)
+                    setting.wordsrandom()
                     setting.webhookinfo()
                 else
                     setting.rotate(threads,doorworldleveling,idblockleveling)
@@ -2121,6 +2345,7 @@ setting.levelingcek = function(threads)
                 setting.storingevents(threads)
                 setJob("Rechecking")
                 setting.warp(threads,doorworldleveling)
+                setting.wordsrandom()
                 setting.webhookinfo()
             elseif findItem(idblockleveling+1) >= amountseed then
                 setting.plant(threads,doorworldleveling,idblockleveling+1)
@@ -2130,6 +2355,7 @@ setting.levelingcek = function(threads)
                 setting.storingpacks(threads)
                 setJob("Rechecking")
                 setting.warp(threads,doorworldleveling)
+                setting.wordsrandom()
                 setting.webhookinfo()
             end
         end
@@ -2167,6 +2393,7 @@ setting.levelingcek = function(threads)
         setting.storingseeds(threads)
         setJob("Rechecking")
         setting.warp(threads,doorworldleveling)
+        setting.wordsrandom()
         setting.webhookinfo()
     end
 end
@@ -2181,6 +2408,14 @@ setting.plant = function(threads,static,seedid)
             if getTile(97,idx).fg ~= seedid then
                 setting.tilept(threads,static,seedid)
             end
+        end
+    end
+    for _, tile in pairs(getTiles()) do
+        if tile.fg == 6 then
+            findPath(tile.x - 4,tile.y)
+            sleep(delayplant)
+            setting.reconnect(threads,static,tile.x-4,tile.y)
+            setting.tilept(threads,static,seedid)
         end
     end
     for _, tile in pairs(getTiles()) do
@@ -2203,6 +2438,7 @@ setting.plant = function(threads,static,seedid)
         setting.storingseeds(threads)
         setJob("Harvesting")
         setting.warp(threads,static)
+        setting.wordsrandom()
         setting.webhookinfo()
     end
 end
@@ -2221,16 +2457,18 @@ setting.levelings = function(threads)
         end
     end
     for _, tile in pairs(getTiles()) do
-        local count = 0
+        if tile.fg == 6 then
+            findPath(tile.x - 4,tile.y)
+            sleep(delayharvest)
+            setting.reconnect(threads,doorworldleveling,tile.x-4,tile.y)
+            setting.tileht(threads,doorworldleveling,idblockleveling+1)
+        end
+    end
+    for _, tile in pairs(getTiles()) do
         if getTile(tile.x,tile.y).fg == idblockleveling+1 and getTile(tile.x,tile.y).ready then
             findPath(tile.x+2,tile.y)
             sleep(delayharvest)
             setting.reconnect(threads,doorworldleveling,tile.x+2,tile.y)
-            if count >= 3 then
-                findPath(tile.x,tile.y)
-                sleep(delayharvest)
-                setting.reconnect(threads,doorworldleveling,tile.x,tile.y)
-            end
             if tile.fg == idblockleveling+1 then
                 setting.tileht2(threads,doorworldleveling,idblockleveling+1)
             end
@@ -2249,6 +2487,7 @@ setting.levelings = function(threads)
                 setting.rotate(threads,"",idblockleveling)
                 setJob("Leveling")
                 setting.warp(threads,doorworldleveling)
+                setting.wordsrandom()
                 setting.webhookinfo()
                 goto BACK
             else
@@ -2265,6 +2504,7 @@ setting.levelings = function(threads)
             setting.storingpacks(threads)
             setJob("Leveling")
             setting.warp(threads,doorworldleveling)
+            setting.wordsrandom()
             setting.webhookinfo()
             goto BACK
         end
@@ -2334,6 +2574,7 @@ end
 if findItem(9640) > 0 then
     ::SUCK::
     setting.warp(getBot().name,"")
+    setting.wordsrandom()
     while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32) - 1).fg ~= 9640 do
         place(9640,0,-1)
         sleep(delayplace)
@@ -2348,10 +2589,16 @@ if findItem(98) == 0 and pickaxe and getBot().status == "online" then
     goto Check
 end
 if leveling then
+    if getBot().level < 5 then
+        setting.warp(find,"")
+        setting.wordsrandom()
+        setting.indexdirt()
+    end
     for idx, annount in pairs(worldleveling) do
         ::BACK::
         setting.storageinfo()
         setting.warp(annount,doorworldleveling)
+        setting.wordsrandom()
         setting.webhookinfo()
         if not failwarp then
             if not subserver then
@@ -2401,6 +2648,7 @@ while true do
         ::BACK::
         setting.storageinfo()
         setting.warp(value,doorfarm)
+        setting.wordsrandom()
         setting.webhookinfo()
         if not failwarp then
             if not subserver then
@@ -2459,6 +2707,7 @@ while true do
         setting.botinfo("[ "..getBot().name.." ] Already finished all world, Terminated script! @everyone")
         setJob("Finished all world")
         setting.warp(find,"")
+        setting.wordsrandom()
         if removingbot then
             removeBot(getBot().name)
             sleep(1500)
