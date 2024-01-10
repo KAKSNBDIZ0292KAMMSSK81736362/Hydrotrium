@@ -16,6 +16,7 @@ worlds = {}
 backups = {}
 index = 1
 strings = ""
+str = ""
 local tileBlock = 0
 local tileSeed = 0
 local tilePack = 0
@@ -38,6 +39,24 @@ eventY = dropeventY - 1
 posX = customBreakX - 1
 posY = customBreakY - 1
 seed = block + 1
+
+
+setting.tutorial = function()
+    local str = ""
+    addHook("onvariant","tutor",function(var)
+        if var[0] == "OnDialogRequest" then
+            if string.find(var[1],"myWorldsUiTab") then
+                local idx = string.lower(string.match(var[1], 'add_button|(%w+)|'))
+                str = str .. idx
+            end
+        end
+    end)
+    sendPacket("action|wrench\n|netid|"..getBot().netId,2)
+    sleep(1000)
+    sendPacket("action|dialog_return\ndialog_name|popup\nnetID|"..getBot().netId.."|\nbuttonClicked|my_worlds",2)
+    sleep(1000)
+    return str
+end
 
 setting.wordsrandom = function()
     local random = {
@@ -83,23 +102,6 @@ setting.wordsrandom = function()
     sleep(2000)
 end
 
-setting.tutorial = function()
-    local str = ""
-    addHook("onvariant","tutor",function(var)
-        if var[0] == "OnDialogRequest" then
-            if string.find(var[1],"myWorldsUiTab") then
-                local idx = string.lower(string.match(var[1], 'add_button|(%w+)|'))
-                str = str .. idx
-            end
-        end
-    end)
-    sendPacket("action|wrench\n|netid|"..getBot().netId,2)
-    sleep(1000)
-    sendPacket("action|dialog_return\ndialog_name|popup\nnetID|"..getBot().netId.."|\nbuttonClicked|my_worlds",2)
-    sleep(1000)
-    return str
-end
-
 letter = 10
 withnumber = true
 setting.generate = function()
@@ -131,146 +133,6 @@ setting.split = function(str, ptr)
         table.insert(tbl, string) 
     end
     return tbl
-end
-
-setting.tileht = function(threads,static,seedid)
-    botX = math.floor(getBot().x / 32)
-    botY = math.floor(getBot().y / 32)
-    while getTile(botX - 2,botY).fg == seedid and getTile(botX - 2,botY).ready do
-        punch(-2,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    while getTile(botX - 1,botY).fg == seedid and getTile(botX - 1,botY).ready do
-        punch(-1,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    while getTile(botX,botY).fg == seedid and getTile(botX,botY).ready do
-        punch(0,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    while getTile(botX + 1,botY).fg == seedid and getTile(botX + 1,botY).ready do
-        punch(1,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    while getTile(botX + 2,botY).fg == seedid and getTile(botX + 2,botY).ready do
-        punch(2,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-end
-
-setting.tilept = function(threads,static,seedid)
-    botX = math.floor(getBot().x / 32)
-    botY = math.floor(getBot().y / 32)
-    while getTile(botX - 2,botY).fg ~= seedid and getTile(botX - 2,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 do
-        place(seedid,-2,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    while getTile(botX - 1,botY).fg ~= seedid and getTile(botX - 1,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 do
-        place(seedid,-1,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    while getTile(botX,botY).fg ~= seedid and getTile(botX,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 do
-        place(seedid,0,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    while getTile(botX + 1,botY).fg ~= seedid and getTile(botX + 1,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 do
-        place(seedid,1,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    while getTile(botX + 2,botY).fg ~= seedid and getTile(botX + 2,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 do
-        place(seedid,2,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-end
-
-setting.tileht2 = function(threads,static,seedid)
-    botX = math.floor(getBot().x / 32)
-    botY = math.floor(getBot().y / 32)
-    if getTile(botX - 2,botY).fg == seedid and getTile(botX - 2,botY).ready then
-        punch(-2,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    if getTile(botX - 1,botY).fg == seedid and getTile(botX - 1,botY).ready then
-        punch(-1,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    if getTile(botX,botY).fg == seedid and getTile(botX,botY).ready then
-        punch(0,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    if getTile(botX + 1,botY).fg == seedid and getTile(botX + 1,botY).ready then
-        punch(1,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-    if getTile(botX + 2,botY).fg == seedid and getTile(botX + 2,botY).ready then
-        punch(2,0)
-        sleep(delayharvest)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayharvest)
-end
-
-setting.tilept2 = function(threads,static,seedid)
-    botX = math.floor(getBot().x / 32)
-    botY = math.floor(getBot().y / 32)
-    if getTile(botX - 2,botY).fg ~= seedid and getTile(botX - 2,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 then
-        place(seedid,-2,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    if getTile(botX - 1,botY).fg ~= seedid and getTile(botX - 1,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 then
-        place(seedid,-1,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    if getTile(botX,botY).fg ~= seedid and getTile(botX,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 then
-        place(seedid,0,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    if getTile(botX + 1,botY).fg ~= seedid and getTile(botX + 1,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 then
-        place(seedid,1,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
-    if getTile(botX + 2,botY).fg ~= seedid and getTile(botX + 2,botY + 1).fg ~= 0 and findItem(seedid) ~= 0 then
-        place(seedid,2,0)
-        sleep(delayplant)
-        setting.reconnect(threads,static,botX,botY)
-    end
-    sleep(delayplant)
 end
 
 for i =  1,farmperbot do
@@ -671,7 +533,7 @@ setting.webhookinfo = function()
                 username = "Debra's"
                 embeds = @(
                     @{
-                        title = "Rotation 0.1 [BOT STATIC]"
+                        title = "BOT STATICS"
                         color = "]]..math.random(111111,999999)..[["
                         fields = @(
                             @{
@@ -696,7 +558,7 @@ setting.webhookinfo = function()
                             }
                         )
                         footer = @{
-                            text = "[Hydrotrium] Caramoy's`nLast update : ]]..(os.date("!%a %b %d, %Y at %I:%M %p", os.time() + 7 * 60 * 60))..[["
+                            text = "[Hydrotrium v0.1] Caramoy's`nLast update : ]]..(os.date("!%a %b %d, %Y at %I:%M %p", os.time() + 7 * 60 * 60))..[["
                         }
                     }
                 )
@@ -718,7 +580,7 @@ setting.storageinfo = function()
                 username = "Debra's"
                 embeds = @(
                     @{
-                        title = "Rotation 0.1 [STORAGE STATIC]"
+                        title = "STORAGE STATICS"
                         color = "]]..math.random(111111,999999)..[["
                         fields = @(
                             @{
@@ -738,7 +600,7 @@ setting.storageinfo = function()
                             }
                         )
                         footer = @{
-                            text = "[Hydrotrium] Caramoy's`nLast update : ]]..(os.date("!%a %b %d, %Y at %I:%M %p", os.time() + 7 * 60 * 60))..[["
+                            text = "[Hydrotrium v0.1] Caramoy's`nLast update : ]]..(os.date("!%a %b %d, %Y at %I:%M %p", os.time() + 7 * 60 * 60))..[["
                         }
                     }
                 )
@@ -1956,30 +1818,18 @@ setting.rechecking = function(threads)
     for _, tile in pairs(getTiles()) do
         if tile.fg == seed and tile.ready then
             findPath(tile.x,tile.y)
-            sleep(delayharvest)
             setting.reconnect(threads,doorfarm,tile.x,tile.y)
-            if tile.fg == seed and tile.ready then
+            if tile.fg == seed then
                 punch(0,0)
                 sleep(delayharvest)
                 setting.reconnect(threads,doorfarm,tile.x,tile.y)
             end
-            if leveling then
-                if getBot().level >= setminlvl then
-                    if ignoregems then
-                        collect(range,112)
-                    else
-                        collect(range)
-                    end
-                    sleep(30)
-                end
+            if ignoregems then
+                collect(range,112)
             else
-                if ignoregems then
-                    collect(range,112)
-                else
-                    collect(range)
-                end
-                sleep(30)
+                collect(range)
             end
+            sleep(30)
         end
         if findItem(iditemtowear) == 0 then
             if itemtowear then
@@ -1991,28 +1841,14 @@ setting.rechecking = function(threads)
             end
         end
         if findItem(block) > 180 then
-            if leveling then
-                if getBot().level >= setminlvl then
-                    if pnbother then
-                        setting.rotate(threads,doorfarm,block)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.wordsrandom()
-                        setting.webhookinfo()
-                    else
-                        setting.rotate(threads,doorfarm,block)
-                    end
-                end
+            if pnbother then
+                setting.rotate(threads,doorfarm,block)
+                setJob("Rechecking")
+                setting.warp(threads,doorfarm)
+                setting.wordsrandom()
+                setting.webhookinfo()
             else
-                if pnbother then
-                    setting.rotate(threads,doorfarm,block)
-                    setJob("Rechecking")
-                    setting.warp(threads,doorfarm)
-                    setting.wordsrandom()
-                    setting.webhookinfo()
-                else
-                    setting.rotate(threads,doorfarm,block)
-                end
+                setting.rotate(threads,doorfarm,block)
             end
         end
         if findItem(eventList[1]) > amountevent then
@@ -2030,6 +1866,13 @@ setting.rechecking = function(threads)
                 setting.webhookinfo()
             else
                 setting.plant(threads,doorfarm,seed)
+                if findItem(seed) >= amountseed then
+                    setting.storingseeds(threads)
+                    setJob("Harvesting")
+                    setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
+                    setting.webhookinfo()
+                end
                 goto BACK
             end
         elseif findItem(112) > mingems and buypack then
@@ -2041,141 +1884,60 @@ setting.rechecking = function(threads)
             setting.webhookinfo()
         end
     end
-    if leveling then
-        if getBot().level >= setminlvl then
-            for _, obj in pairs(getObjects()) do
-                if obj.id == block then
-                    if setting.itemFloat(block) ~= 0 then
-                        findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
-                        sleep(30)
-                        if ignoregems then
-                            collect(range,112)
-                        else
-                            collect(range)
-                        end
-                        setting.reconnect(threads,doorfarm,math.floor(obj.x / 32),math.floor(obj.y / 32))
-                    end
-                    if findItem(block) > 180 then
-                        if pnbother then
-                            setting.rotate(threads,doorfarm,block)
-                            setJob("Rechecking")
-                            setting.warp(threads,doorfarm)
-                            setting.wordsrandom()
-                            setting.webhookinfo()
-                        else
-                            setting.rotate(threads,doorfarm,block)
-                        end
-                    end
-                    if findItem(eventList[1]) > amountevent then
-                        setting.storingevents(threads)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.wordsrandom()
-                        setting.webhookinfo()
-                    elseif findItem(seed) >= amountseed then
-                        if dontplant then
-                            setting.storingseeds(threads)
-                            setJob("Rechecking")
-                            setting.warp(threads,doorfarm)
-                            setting.wordsrandom()
-                            setting.webhookinfo()
-                        else
-                            setting.plant(threads,doorfarm,seed)
-                            goto BACK
-                        end
-                    elseif findItem(112) > mingems and buypack then
-                        setting.buying(threads)
-                        setting.storingpacks(threads)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.wordsrandom()
-                        setting.webhookinfo()
-                    end
+    for _, obj in pairs(getObjects()) do
+        if obj.id == block then
+            if setting.itemFloat(block) ~= 0 then
+                findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
+                sleep(30)
+                if ignoregems then
+                    collect(range,112)
+                else
+                    collect(range)
                 end
+                setting.reconnect(threads,doorfarm,math.floor(obj.x / 32),math.floor(obj.y / 32))
             end
-        end
-    else
-        for _, obj in pairs(getObjects()) do
-            if obj.id == block then
-                if setting.itemFloat(block) ~= 0 then
-                    findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
-                    sleep(30)
-                    if ignoregems then
-                        collect(range,112)
-                    else
-                        collect(range)
-                    end
-                    setting.reconnect(threads,doorfarm,math.floor(obj.x / 32),math.floor(obj.y / 32))
-                end
-                if findItem(block) > 180 then
-                    if pnbother then
-                        setting.rotate(threads,doorfarm,block)
-                        setJob("Rechecking")
-                        setting.warp(threads,doorfarm)
-                        setting.wordsrandom()
-                        setting.webhookinfo()
-                    else
-                        setting.rotate(threads,doorfarm,block)
-                    end
-                end
-                if findItem(eventList[1]) > amountevent then
-                    setting.storingevents(threads)
+            if findItem(block) > 180 then
+                if pnbother then
+                    setting.rotate(threads,doorfarm,block)
                     setJob("Rechecking")
                     setting.warp(threads,doorfarm)
                     setting.wordsrandom()
                     setting.webhookinfo()
-                elseif findItem(seed) >= amountseed then
-                    if dontplant then
+                else
+                    setting.rotate(threads,doorfarm,block)
+                end
+            end
+            if findItem(eventList[1]) > amountevent then
+                setting.storingevents(threads)
+                setJob("Rechecking")
+                setting.warp(threads,doorfarm)
+                setting.wordsrandom()
+                setting.webhookinfo()
+            elseif findItem(seed) >= amountseed then
+                if dontplant then
+                    setting.storingseeds(threads)
+                    setJob("Rechecking")
+                    setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
+                    setting.webhookinfo()
+                else
+                    setting.plant(threads,doorfarm,seed)
+                    if findItem(seed) >= amountseed then
                         setting.storingseeds(threads)
-                        setJob("Rechecking")
+                        setJob("Harvesting")
                         setting.warp(threads,doorfarm)
                         setting.wordsrandom()
                         setting.webhookinfo()
-                    else
-                        setting.plant(threads,doorfarm,seed)
-                        goto BACK
                     end
-                elseif findItem(112) > mingems and buypack then
-                    setting.buying(threads)
-                    setting.storingpacks(threads)
-                    setJob("Rechecking")
-                    setting.warp(threads,doorfarm)
-                    setting.wordsrandom()
-                    setting.webhookinfo()
+                    goto BACK
                 end
-            end
-        end
-    end
-    if leveling then
-        if getBot().level >= setminlvl then
-            for _, tile in pairs(getTiles()) do
-                if tile.fg == block or tile.bg == block then
-                    findPath(tile.x,tile.y)
-                    sleep(30)
-                    setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                    while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).bg == block or getTile(math.floor(getBot().x / 32), math.floor(getBot().y / 32)).fg == block do
-                        punch(0,0)
-                        sleep(delaypunch)
-                        setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                    end
-                    collect(3)
-                    sleep(30)
-                end
-            end
-        end
-    else
-        for _, tile in pairs(getTiles()) do
-            if tile.fg == block or tile.bg == block then
-                findPath(tile.x,tile.y)
-                sleep(30)
-                setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).bg == block or getTile(math.floor(getBot().x / 32), math.floor(getBot().y / 32)).fg == block do
-                    punch(0,0)
-                    sleep(delaypunch)
-                    setting.reconnect(threads,doorfarm,tile.x,tile.y)
-                end
-                collect(3)
-                sleep(30)
+            elseif findItem(112) > mingems and buypack then
+                setting.buying(threads)
+                setting.storingpacks(threads)
+                setJob("Rechecking")
+                setting.warp(threads,doorfarm)
+                setting.wordsrandom()
+                setting.webhookinfo()
             end
         end
     end
@@ -2183,7 +1945,6 @@ setting.rechecking = function(threads)
         for _, tile in pairs(getTiles()) do
             if tile.fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(seed) ~= 0 then
                 findPath(tile.x,tile.y)
-                sleep(delayplant)
                 setting.reconnect(threads,doorfarm,tile.x,tile.y)
                 if tile.fg ~= seed then
                     place(seed,0,0)
@@ -2215,102 +1976,110 @@ setting.rechecking = function(threads)
 end
 
 setting.harvest = function(threads)
-    ::BACK::
+    tileA = 99
+    tileB = 0
+    tileC = -1
+    tileD = 0
     setJob("Harvesting")
-    for idx = 1,53 do
-        if getTile(97,idx).fg == seed and getTile(97,idx).ready then
-            findPath(97,idx)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorfarm,97,idx)
-            if getTile(97,idx).fg == seed then
-                setting.tileht(threads,doorfarm,seed)
+    ::BACK::
+    for y = -1, 53 do
+        for x = tileA, tileB, tileC do
+            if getTile(x,y).fg == seed and getTile(x,y).ready then
+                if getBot().level >= maxlevel and backuplevel then
+                    setting.checkaccount(threads)
+                    setJob("Harvesting")
+                    setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
+                    setting.webhookinfo()
+                    goto BACK
+                end
+                if findItem(block) > 180 then
+                    if pnbother then
+                        setting.rotate(threads,"",block)
+                        setJob("Harvesting")
+                        setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
+                        setting.webhookinfo()
+                        goto BACK
+                    else
+                        setting.rotate(threads,doorfarm,block)
+                        goto BACK
+                    end
+                end
+                if findItem(iditemtowear) == 0 then
+                    if itemtowear then
+                        setting.support()
+                        setJob("Harvesting")
+                        setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
+                        setting.webhookinfo()
+                        goto BACK
+                    end
+                end
+                if findItem(eventList[1]) > amountevent then
+                    setting.storingevents(threads)
+                    setJob("Harvesting")
+                    setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
+                    setting.webhookinfo()
+                    goto BACK
+                elseif findItem(seed) > amountseed then
+                    if dontplant then
+                        setting.storingseeds(threads)
+                        setJob("Harvesting")
+                        setting.warp(threads,doorfarm)
+                        setting.wordsrandom()
+                        setting.webhookinfo()
+                        goto BACK
+                    else
+                        setting.plant(threads,doorfarm,seed)
+                        if findItem(seed) >= amountseed then
+                            setting.storingseeds(threads)
+                            setJob("Harvesting")
+                            setting.warp(threads,doorfarm)
+                            setting.wordsrandom()
+                            setting.webhookinfo()
+                        end
+                        goto BACK
+                    end
+                elseif findItem(112) > mingems and buypack then
+                    setting.buying(threads)
+                    setting.storingpacks(threads)
+                    setJob("Harvesting")
+                    setting.warp(threads,doorfarm)
+                    setting.wordsrandom()
+                    setting.webhookinfo()
+                    goto BACK
+                end
+                findPath(x,y)
+                setting.reconnect(threads,doorfarm,x,y)
+                if getTile(x,y).fg == seed then
+                    punch(0,0)
+                    sleep(delayharvest)
+                    setting.reconnect(threads,doorfarm,x,y)
+                end
+                if ignoregems then
+                    collect(range,112)
+                else
+                    collect(range)
+                end
+                sleep(30)
             end
         end
-    end
-    for _, tile in pairs(getTiles()) do
-        if tile.fg == 6 then
-            if getTile(tile.x - 4, tile.y).fg == seed then
-                findPath(tile.x - 4,tile.y)
-                sleep(delayharvest)
-                setting.reconnect(threads,doorfarm,tile.x - 4,tile.y)
-                setting.tileht(threads,doorfarm,seed)
+        if tileD == 1 then
+            if tileA == 0 then
+                tileA = 99
+                tileB = 0
+                tileC = -1
+                tileD = 0
+            elseif tileA == 99 then
+                tileA = 0
+                tileB = 99
+                tileC = 1
+                tileD = 0
             end
-        end
-    end
-    for _, tile in pairs(getTiles()) do
-        if getTile(tile.x,tile.y).fg == seed and getTile(tile.x,tile.y).ready then
-            findPath(tile.x+2,tile.y)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorfarm,tile.x+2,tile.y)
-            if tile.fg == seed then
-                setting.tileht2(threads,doorfarm,seed)
-            end
-            if ignoregems then
-                collect(range,112)
-            else
-                collect(range)
-            end
-            sleep(30)
-        end
-        if getBot().level >= maxlevel and backuplevel then
-            setting.checkaccount(threads)
-            setJob("Harvesting")
-            setting.warp(threads,doorfarm)
-            setting.wordsrandom()
-            setting.webhookinfo()
-            goto BACK
-        end
-        if findItem(block) > 180 then
-            if pnbother then
-                setting.rotate(threads,"",block)
-                setJob("Harvesting")
-                setting.warp(threads,doorfarm)
-                setting.wordsrandom()
-                setting.webhookinfo()
-                goto BACK
-            else
-                setting.rotate(threads,doorfarm,block)
-                goto BACK
-            end
-        end
-        if findItem(iditemtowear) == 0 then
-            if itemtowear then
-                setting.support()
-                setJob("Harvesting")
-                setting.warp(threads,doorfarm)
-                setting.wordsrandom()
-                setting.webhookinfo()
-                goto BACK
-            end
-        end
-        if findItem(eventList[1]) > amountevent then
-            setting.storingevents(threads)
-            setJob("Harvesting")
-            setting.warp(threads,doorfarm)
-            setting.wordsrandom()
-            setting.webhookinfo()
-            goto BACK
-        elseif findItem(seed) > amountseed then
-            if dontplant then
-                setting.storingseeds(threads)
-                setJob("Harvesting")
-                setting.warp(threads,doorfarm)
-                setting.wordsrandom()
-                setting.webhookinfo()
-                goto BACK
-            else
-                setting.plant(threads,doorfarm,seed)
-                setJob("Harvesting")
-                goto BACK
-            end
-        elseif findItem(112) > mingems and buypack then
-            setting.buying(threads)
-            setting.storingpacks(threads)
-            setJob("Harvesting")
-            setting.warp(threads,doorfarm)
-            setting.wordsrandom()
-            setting.webhookinfo()
-            goto BACK
+        elseif tileD == 0 then
+            tileD = tileD + 1
         end
     end
 end
@@ -2361,20 +2130,6 @@ setting.levelingcek = function(threads)
         end
     end
     for _, tile in pairs(getTiles()) do
-        if tile.fg == idblockleveling or tile.bg == idblockleveling then
-            findPath(tile.x,tile.y)
-            sleep(30)
-            setting.reconnect(threads,doorworldleveling,tile.x,tile.y)
-            while getTile(math.floor(getBot().x / 32),math.floor(getBot().y / 32)).bg == idblockleveling or getTile(math.floor(getBot().x / 32), math.floor(getBot().y / 32)).fg == idblockleveling do
-                punch(0,0)
-                sleep(delaypunch)
-                setting.reconnect(threads,doorworldleveling,tile.x,tile.y)
-            end
-            collect(3)
-            sleep(30)
-        end
-    end
-    for _, tile in pairs(getTiles()) do
         if tile.fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(idblockleveling+1) ~= 0 then
             findPath(tile.x,tile.y)
             sleep(delayplant)
@@ -2389,124 +2144,116 @@ setting.levelingcek = function(threads)
             break
         end
     end
-    if findItem(idblockleveling+1) >= amountseed then
-        setting.storingseeds(threads)
-        setJob("Rechecking")
-        setting.warp(threads,doorworldleveling)
-        setting.wordsrandom()
-        setting.webhookinfo()
-    end
 end
 
 setting.plant = function(threads,static,seedid)
+    tileA = 99
+    tileB = 0
+    tileC = -1
+    tileD = 0
     setJob("Planting")
-    for idx = 1,53 do
-        if getTile(97,idx).fg == 0 and getTile(97,idx + 1).flags ~= 0 and findItem(seedid) ~= 0 then
-            findPath(97,idx)
-            sleep(delayplace)
-            setting.reconnect(threads,static,97,idx)
-            if getTile(97,idx).fg ~= seedid then
-                setting.tilept(threads,static,seedid)
-            end
-        end
-    end
-    for _, tile in pairs(getTiles()) do
-        if tile.fg == 6 then
-            findPath(tile.x - 4,tile.y)
-            sleep(delayplant)
-            setting.reconnect(threads,static,tile.x-4,tile.y)
-            setting.tilept(threads,static,seedid)
-        end
-    end
-    for _, tile in pairs(getTiles()) do
-        local count = 0
-        if getTile(tile.x,tile.y).fg == 0 and getTile(tile.x,tile.y + 1).flags ~= 0 and findItem(seedid) ~= 0 then
-            findPath(tile.x+2,tile.y)
-            sleep(delayplant)
-            setting.reconnect(threads,static,tile.x+2,tile.y)
-            if count >= 3 then
-                findPath(tile.x,tile.y)
+    for y = -1, 53 do
+        for x = tileA, tileB, tileC do
+            if getTile(x,y).fg == 0 and getTile(x,y + 1).flags ~= 0 and findItem(seedid) ~= 0 then
+                if findItem(seedid) == 0 then
+                    break
+                end
+                findPath(x,y)
                 sleep(delayplant)
-                setting.reconnect(threads,static,tile.x,tile.y)
-            end
-            if tile.fg ~= seedid then
-                setting.tilept2(threads,static,seedid)
+                setting.reconnect(threads,static,x,y)
+                if getTile(x,y).fg ~= seedid then
+                    place(seedid,0,0)
+                    sleep(delayplant)
+                    setting.reconnect(threads,static,x,y)
+                end
             end
         end
-    end
-    if findItem(seedid) >= amountseed then
-        setting.storingseeds(threads)
-        setJob("Harvesting")
-        setting.warp(threads,static)
-        setting.wordsrandom()
-        setting.webhookinfo()
+        if tileD == 1 then
+            if tileA == 0 then
+                tileA = 99
+                tileB = 0
+                tileC = -1
+                tileD = 0
+            elseif tileA == 99 then
+                tileA = 0
+                tileB = 99
+                tileC = 1
+                tileD = 0
+            end
+        elseif tileD == 0 then
+            tileD = tileD + 1
+        end
     end
 end
 
 setting.levelings = function(threads)
+    tileA = 99
+    tileB = 0
+    tileC = -1
+    tileD = 0
     setJob("Leveling")
     ::BACK::
-    for idx = 1,53 do
-        if getTile(97,idx).fg == idblockleveling+1 and getTile(97,idx).ready then
-            findPath(97,idx)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorworldleveling,97,idx)
-            if getTile(97,idx).fg == idblockleveling+1 then
-                setting.tileht(threads,doorworldleveling,idblockleveling+1)
+    for y = -1, 53 do
+        for x = tileA, tileB, tileC do
+            if getTile(x,y).fg == idblockleveling+1 and getTile(x,y).ready then
+                if getBot().level >= setminlvl then
+                    break
+                end
+                if findItem(idblockleveling) > 180 then
+                    if pnbother then
+                        setting.rotate(threads,"",idblockleveling)
+                        setJob("Leveling")
+                        setting.warp(threads,doorworldleveling)
+                        setting.wordsrandom()
+                        setting.webhookinfo()
+                        goto BACK
+                    else
+                        setting.rotate(threads,doorworldleveling,idblockleveling)
+                        goto BACK
+                    end
+                end
+                if findItem(idblockleveling+1) > amountseed then
+                    setting.plant(threads,doorworldleveling,idblockleveling+1)
+                    setJob("Leveling")
+                    goto BACK
+                elseif findItem(112) > mingems and buypack then
+                    setting.buying(threads)
+                    setting.storingpacks(threads)
+                    setJob("Leveling")
+                    setting.warp(threads,doorworldleveling)
+                    setting.wordsrandom()
+                    setting.webhookinfo()
+                    goto BACK
+                end
+                findPath(x,y)
+                setting.reconnect(threads,doorworldleveling,x,y)
+                if getTile(x,y).fg == idblockleveling+1 then
+                    punch(0,0)
+                    sleep(delayharvest)
+                    setting.reconnect(threads,doorworldleveling,x,y)
+                end
+                if ignoregems then
+                    collect(range,112)
+                else
+                    collect(range)
+                end
+                sleep(30)
             end
         end
-    end
-    for _, tile in pairs(getTiles()) do
-        if tile.fg == 6 then
-            findPath(tile.x - 4,tile.y)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorworldleveling,tile.x-4,tile.y)
-            setting.tileht(threads,doorworldleveling,idblockleveling+1)
-        end
-    end
-    for _, tile in pairs(getTiles()) do
-        if getTile(tile.x,tile.y).fg == idblockleveling+1 and getTile(tile.x,tile.y).ready then
-            findPath(tile.x+2,tile.y)
-            sleep(delayharvest)
-            setting.reconnect(threads,doorworldleveling,tile.x+2,tile.y)
-            if tile.fg == idblockleveling+1 then
-                setting.tileht2(threads,doorworldleveling,idblockleveling+1)
+        if tileD == 1 then
+            if tileA == 0 then
+                tileA = 99
+                tileB = 0
+                tileC = -1
+                tileD = 0
+            elseif tileA == 99 then
+                tileA = 0
+                tileB = 99
+                tileC = 1
+                tileD = 0
             end
-            if ignoregems then
-                collect(range,112)
-            else
-                collect(range)
-            end
-            sleep(30)
-        end
-        if getBot().level >= setminlvl then
-            break
-        end
-        if findItem(idblockleveling) > 180 then
-            if pnbother then
-                setting.rotate(threads,"",idblockleveling)
-                setJob("Leveling")
-                setting.warp(threads,doorworldleveling)
-                setting.wordsrandom()
-                setting.webhookinfo()
-                goto BACK
-            else
-                setting.rotate(threads,doorworldleveling,idblockleveling)
-                goto BACK
-            end
-        end
-        if findItem(idblockleveling+1) > amountseed then
-            setting.plant(threads,doorworldleveling,idblockleveling+1)
-            setJob("Leveling")
-            goto BACK
-        elseif findItem(112) > mingems and buypack then
-            setting.buying(threads)
-            setting.storingpacks(threads)
-            setJob("Leveling")
-            setting.warp(threads,doorworldleveling)
-            setting.wordsrandom()
-            setting.webhookinfo()
-            goto BACK
+        elseif tileD == 0 then
+            tileD = tileD + 1
         end
     end
 end
